@@ -7,7 +7,7 @@ import { axios } from "../lib/axiosInstance";
 export default function index({ projects }) {
     return (
         <Layout>
-            <Container className={"grid md:grid-cols-3 gap-8"}>
+            <Container className={"grid md:grid-cols-3 min-h-screen gap-8"}>
                 {projects.map((item, index) => (
                     <ProjectItem key={index} data={item} />
                 ))}

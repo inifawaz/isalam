@@ -2,7 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import { HiOutlineLocationMarker } from "react-icons/hi";
+import {
+    HiOutlineLocationMarker,
+    HiOutlineUserGroup,
+    HiOutlineTag,
+} from "react-icons/hi";
 import { BiTimer } from "react-icons/bi";
 
 export default function ProjectItem({ data }) {
@@ -12,22 +16,22 @@ export default function ProjectItem({ data }) {
                 <div className='relative shadow-md aspect-square'>
                     <Image src={data.picture_url} layout='fill' />
                 </div>
-                <div className='p-4 bg-white shadow-md'>
-                    <div className='flex justify-between items-center'>
+                <div className='p-4 bg-white border shadow-md'>
+                    <div className='flex space-x-4 items-center'>
+                        <div className='flex items-center space-x-1'>
+                            <HiOutlineTag className='text-gray-400' />
+                            <p className='text-xs text-gray-400'>
+                                {data.category}
+                            </p>
+                        </div>
                         <div className='flex items-center space-x-1'>
                             <HiOutlineLocationMarker className='text-gray-400' />
                             <p className='text-xs text-gray-400'>
                                 {data.location}
                             </p>
                         </div>
-                        <div className='flex items-center space-x-1'>
-                            <BiTimer size={"1.2em"} className='text-gray-400' />
-                            <p className='text-xs text-gray-400'>
-                                {data.days_target} hari lagi
-                            </p>
-                        </div>
                     </div>
-                    <h1 className='text-primary-600 my-2 text-lg font-medium'>
+                    <h1 className='text-primary-600 my-1 text-lg font-medium'>
                         {data.title}
                     </h1>
                     <div className='flex justify-between items-center'>
@@ -50,6 +54,18 @@ export default function ProjectItem({ data }) {
                     </div>
                     <div className='h-1 rounded-full bg-gray-200 mt-1'>
                         <div className='h-1 rounded-full bg-emerald-500 w-[45%]'></div>
+                    </div>
+                    <div className='flex justify-between items-center mt-2'>
+                        <div className='flex items-center space-x-1'>
+                            <HiOutlineUserGroup className='text-gray-400' />
+                            <p className='text-xs text-gray-400'>64 Pewakaf</p>
+                        </div>
+                        <div className='flex items-center space-x-1'>
+                            <BiTimer size={"1.2em"} className='text-gray-400' />
+                            <p className='text-xs text-gray-400'>
+                                {data.days_target} hari lagi
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>

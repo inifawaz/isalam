@@ -70,7 +70,7 @@ export default function Header() {
             });
     };
     return (
-        <div className='shadow fixed inset-x-0 top-0'>
+        <div className='shadow bg-white   fixed z-20 inset-x-0 top-0'>
             <Container className={"flex justify-between items-center "}>
                 <Link href={"/"}>
                     <div className=' relative cursor-pointer  w-32  '>
