@@ -3,6 +3,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import Container from "../../components/Container";
 import Layout from "../../components/Layout";
+import ProjectItem from "../../components/ProjectItem";
 import { axios } from "../../lib/axiosInstance";
 
 import {
@@ -36,18 +37,19 @@ export default function ProjectDetail({ project }) {
     return (
         <Layout>
             <Container className={"grid md:grid-cols-5 gap-8"}>
-                <div className='col-span-3'>
+                <div className='col-span-3 h-fit'>
                     <div>
-                        <div className='relative border shadow-md aspect-square'>
+                        {/* <div className='relative border shadow-md aspect-square hidden md:block'>
                             <Image src={project.picture_url} layout='fill' />
-                        </div>
+                        </div> */}
+                        <ProjectItem data={project} />
                         <div className='md:p-6 p-4 border bg-white shadow-md'>
                             <p>{project.caption}</p>
                         </div>
                     </div>
                     <Tab.Group
                         defaultIndex={1}
-                        className='mt-4  bg-white shadow-md border'
+                        className='  bg-white shadow-md border'
                         as={"div"}>
                         <Tab.List
                             className={
@@ -124,11 +126,16 @@ export default function ProjectDetail({ project }) {
                             </Tab.Panel>
                         </Tab.Panels>
                     </Tab.Group>
-                    <div className='fixed md:hidden bottom-0 shadow-md border-t z-20 inset-x-0 bg-white p-3'>
-                        <button className='bg-secondary-500 text-white py-2 w-full rounded-md'>
+                    <div className='  md:static sticky bottom-0 z-10    p-4 md:p-6'>
+                        <button className='bg-secondary-500 text-white py-2 w-full shadow-xl rounded-md'>
                             Wakaf Sekarang
                         </button>
                     </div>
+                    {/* <div className='fixed md:hidden bottom-0 shadow-md border-t z-20 inset-x-0 bg-white p-3'>
+                        <button className='bg-secondary-500 text-white py-2 w-full rounded-md'>
+                            Wakaf Sekarang
+                        </button>
+                    </div> */}
                 </div>
                 <div className='col-span-2 hidden md:block'>
                     <div className='p-4 md:p-6 sticky top-[58px] bg-white border shadow-md'>
