@@ -126,7 +126,7 @@ export default function ProjectDetail({ project }) {
                             </Tab.Panel>
                         </Tab.Panels>
                     </Tab.Group>
-                    <div className='  md:static sticky bottom-0 z-10    p-4 md:p-6'>
+                    <div className='  md:static sticky bottom-0 z-10    py-4 md:py-6'>
                         <button className='bg-secondary-500 text-white py-2 w-full shadow-xl rounded-md'>
                             Wakaf Sekarang
                         </button>
