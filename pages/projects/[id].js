@@ -1,6 +1,6 @@
 import { Tab } from "@headlessui/react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Container from "../../components/Container";
 import Layout from "../../components/Layout";
 import ProjectItem from "../../components/ProjectItem";
@@ -15,8 +15,12 @@ import {
 import PewakafItem from "../../components/PewakafItem";
 import UpdateItem from "../../components/UpdateItem";
 import { BiTimer } from "react-icons/bi";
+import AppContext from "../../context/AppContext";
+import { useRouter } from "next/router";
 
 export default function ProjectDetail({ project }) {
+    const { bio, token } = useContext(AppContext);
+    const router = useRouter();
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
@@ -34,6 +38,13 @@ export default function ProjectDetail({ project }) {
             count: 0,
         },
     ]);
+    const handleBtnWakafSekarang = () => {
+        if (!bio && !token) {
+            router.push("/login");
+        } else {
+            router.push(`/projects/${project.id}/create-transaction`);
+        }
+    };
     return (
         <Layout>
             <Container className={"grid md:grid-cols-5 gap-8"}>
@@ -127,15 +138,14 @@ export default function ProjectDetail({ project }) {
                         </Tab.Panels>
                     </Tab.Group>
                     <div className='  md:static sticky bottom-0 z-10    py-4 md:py-6'>
-                        <button className='bg-secondary-500 text-white py-2 w-full shadow-xl rounded-md'>
-                            Wakaf Sekarang
+                        <button
+                            onClick={handleBtnWakafSekarang}
+                            className='bg-secondary-500 text-white py-2.5 w-full shadow-xl rounded-md'>
+                            {!bio && !token
+                                ? "Masuk Untuk Mulai Berwakaf"
+                                : "Wakaf Sekarang"}
                         </button>
                     </div>
-                    {/* <div className='fixed md:hidden bottom-0 shadow-md border-t z-20 inset-x-0 bg-white p-3'>
-                        <button className='bg-secondary-500 text-white py-2 w-full rounded-md'>
-                            Wakaf Sekarang
-                        </button>
-                    </div> */}
                 </div>
                 <div className='col-span-2 hidden md:block'>
                     <div className='p-4 md:p-6 sticky top-[58px] bg-white border shadow-md'>
@@ -194,8 +204,12 @@ export default function ProjectDetail({ project }) {
                                 </p>
                             </div>
                         </div>
-                        <button className='bg-secondary-500 mt-4 text-white py-2 w-full rounded-md'>
-                            Wakaf Sekarang
+                        <button
+                            onClick={handleBtnWakafSekarang}
+                            className='bg-secondary-500 mt-4 text-white py-2 w-full rounded-md'>
+                            {!bio && !token
+                                ? "Masuk Untuk Mulai Berwakaf"
+                                : "Wakaf Sekarang"}
                         </button>
                     </div>
                 </div>

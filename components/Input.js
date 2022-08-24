@@ -24,6 +24,7 @@ export default function Input({
                 disabled={disabled}
                 className={`
                     ${label ? "mt-1" : ""}
+                    disabled:bg-gray-100
                     text-gray-600
                     tracking-wider
                     block

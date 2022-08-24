@@ -3,7 +3,11 @@ const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
     images: {
-        domains: ["placekitten.com", "api.isalamwakaf.com"],
+        domains: [
+            "placekitten.com",
+            "api.isalamwakaf.com",
+            "images.duitku.com",
+        ],
     },
 };
 
