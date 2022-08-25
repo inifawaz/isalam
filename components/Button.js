@@ -13,7 +13,7 @@ export default function Button({
             onClick={onClick}
             type='submit'
             disabled={disabled}
-            className={`bg-${color}-500 text-white w-full transition-all rounded-md py-2.5 disabled:bg-gray-400 cursor-pointer hover:bg-${color}-600 transition-all`}>
+            className={`bg-${color}-500 text-white w-full transition-all mt-4 rounded-md py-2.5 disabled:bg-gray-400 cursor-pointer hover:bg-${color}-600 transition-all`}>
             {loading ? <Loader /> : children}
         </button>
     );

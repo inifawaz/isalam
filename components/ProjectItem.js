@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
 
 import {
     HiOutlineLocationMarker,
@@ -8,11 +8,15 @@ import {
     HiOutlineTag,
 } from "react-icons/hi";
 import { BiTimer } from "react-icons/bi";
+import AppContext from "../context/AppContext";
 
 export default function ProjectItem({ data }) {
+    const { setPageLoading } = useContext(AppContext);
     return (
         <Link href={`/projects/${data.id}`}>
-            <div className=' cursor-pointer'>
+            <div
+                onClick={() => setPageLoading(true)}
+                className=' cursor-pointer'>
                 <div className='relative shadow-md aspect-square'>
                     <Image
                         src={data.picture_url}

@@ -17,18 +17,20 @@ export default function index({ transactions }) {
     };
     return (
         <Layout>
-            <Container className={"grid grid-cols-5 gap-8"}>
-                <div></div>
+            <Container className={"grid md:grid-cols-5 gap-8"}>
                 <div className='col-span-3'>
+                    <h1 className='text-2xl text-gray-600 mb-4'>Pembayaran</h1>
                     {transactions.map((item, index) => (
                         <div
                             key={index}
-                            className='p-6 shadow-md border flex justify-between items-center'>
+                            className='p-6 shadow-md border flex flex-col justify-between '>
                             <div>
-                                <div className='text-xs p-1'>
+                                <div className='text-xs '>
                                     {item.response_status_message}
                                 </div>
-                                <h1>{item.product_details}</h1>
+                                <h1 className='text-primary-600'>
+                                    {item.product_details}
+                                </h1>
                                 <div className='flex space-x-4'>
                                     <small>{formatDate(item.created_at)}</small>
                                     <small>
@@ -43,7 +45,7 @@ export default function index({ transactions }) {
                                         "_blank"
                                     );
                                 }}
-                                className='text-xs py-1.5 px-3 bg-secondary-500 text-white'>
+                                className='text-xs py-1.5 px-3 mt-2 rounded-md bg-secondary-500 text-white'>
                                 Bayar Sekarang
                             </button>
                         </div>

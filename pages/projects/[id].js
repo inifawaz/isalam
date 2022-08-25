@@ -1,6 +1,6 @@
 import { RadioGroup, Tab } from "@headlessui/react";
 import Image from "next/image";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Container from "../../components/Container";
 import Layout from "../../components/Layout";
 import ProjectItem from "../../components/ProjectItem";
@@ -20,8 +20,12 @@ import { useRouter } from "next/router";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { number } from "yup/lib/locale";
+import PageLoading from "../../components/PageLoading";
+import Button from "../../components/Button";
 
 export default function ProjectDetail({ project }) {
+    const { pageLoading, setPageLoading } = useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(false);
     const elamount = useRef(null);
     const { bio, token } = useContext(AppContext);
     const choicesAmount = [
@@ -62,6 +66,8 @@ export default function ProjectDetail({ project }) {
         },
     ]);
     const handleBtnWakafSekarang = () => {
+        if (formik.values.amount) setIsLoading(true);
+
         if (formik.values.amount === "") {
             elamount.current.scrollIntoView({
                 behavior: "smooth",
@@ -71,11 +77,17 @@ export default function ProjectDetail({ project }) {
         if (!bio && !token) {
             router.push("/login");
         } else {
+            if (formik.values.amount === "") return;
             router.push(
                 `/projects/${project.id}/create-transaction?amount=${formik.values.amount}`
             );
         }
     };
+
+    useEffect(() => {
+        setPageLoading(false);
+    }, []);
+
     return (
         <Layout>
             <Container className={"grid md:grid-cols-5 gap-8"}>
@@ -90,7 +102,7 @@ export default function ProjectDetail({ project }) {
                         </div>
                     </div>
                     <Tab.Group
-                        defaultIndex={1}
+                        defaultIndex={2}
                         className='  bg-white shadow-md border'
                         as={"div"}>
                         <Tab.List
@@ -208,13 +220,14 @@ export default function ProjectDetail({ project }) {
                         </label>
                     </div>
                     <div className='  md:static sticky bottom-0 z-10    py-4 md:py-6'>
-                        <button
-                            onClick={handleBtnWakafSekarang}
-                            className='bg-secondary-500 text-white py-2.5 w-full shadow-xl rounded-md'>
+                        <Button
+                            color={"secondary"}
+                            loading={isLoading}
+                            onClick={handleBtnWakafSekarang}>
                             {!bio && !token
                                 ? "Masuk Untuk Mulai Berwakaf"
                                 : "Wakaf Sekarang"}
-                        </button>
+                        </Button>
                     </div>
                 </div>
                 <div className='col-span-2 hidden md:block'>
@@ -313,13 +326,20 @@ export default function ProjectDetail({ project }) {
                                 />
                             </label>
                         </div>
-                        <button
-                            onClick={handleBtnWakafSekarang}
-                            className='bg-secondary-500 mt-4 text-white py-2 w-full rounded-md'>
+
+                        <Button
+                            color={"secondary"}
+                            loading={isLoading}
+                            onClick={handleBtnWakafSekarang}>
                             {!bio && !token
                                 ? "Masuk Untuk Mulai Berwakaf"
                                 : "Wakaf Sekarang"}
-                        </button>
+                        </Button>
+                        {/* <button className='bg-secondary-500 mt-4 text-white py-2 w-full rounded-md'>
+                            {!bio && !token
+                                ? "Masuk Untuk Mulai Berwakaf"
+                                : "Wakaf Sekarang"}
+                        </button> */}
                     </div>
                 </div>
             </Container>
@@ -334,6 +354,7 @@ export async function getServerSideProps(ctx) {
         console.log(response.data.project);
         project = response.data.project;
     });
+
     return {
         props: {
             project,
