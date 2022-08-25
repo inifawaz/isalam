@@ -27,7 +27,7 @@ const navigations = [
 
 const navigationsAuth = [
     {
-        href: "/",
+        href: "/me/transactions",
         text: "Pembayaran",
     },
     {

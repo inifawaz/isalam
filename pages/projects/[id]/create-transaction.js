@@ -8,20 +8,27 @@ import { axios } from "../../../lib/axiosInstance";
 import { RadioGroup } from "@headlessui/react";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
+import Button from "../../../components/Button";
 
-export default function createtransaction({ project, paymentMethods }) {
+export default function createtransaction({ project, paymentMethods, amount }) {
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
     const { bio, token } = useContext(AppContext);
+    const [isLoading, setIsLoading] = useState(false);
     const choicesAmount = [
         project.first_choice_amount,
         project.second_choice_amount,
         project.third_choice_amount,
         project.fourth_choice_amount,
     ];
-    const [choiceAmount, setChoiceAmount] = useState("");
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({});
+    const [choiceAmount, setChoiceAmount] = useState("0");
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
+        paymentMethod: "",
+        paymentName: "",
+        paymentImage: "",
+        totalFee: "0",
+    });
     const formikCreateTransaction = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -29,71 +36,55 @@ export default function createtransaction({ project, paymentMethods }) {
             phone_number: bio.phone_number,
             email: bio.email,
             title: project.title,
-            amount: choiceAmount,
+            amount: amount,
         },
     });
+
+    const handleCreateTransation = async () => {
+        setIsLoading(true);
+        const project_id = project.id;
+        const payment_amount =
+            parseInt(formikCreateTransaction.values.amount) +
+            parseInt(project.maintenance_fee);
+        const payment_method = selectedPaymentMethod.paymentMethod;
+        const transaction_fee = 0;
+        console.log(project_id);
+        console.log(payment_amount);
+        console.log(payment_method);
+        console.log(transaction_fee);
+
+        await axios
+            .post(
+                "/transactioninquiries/create",
+                {
+                    project_id,
+                    payment_amount,
+                    payment_method,
+                    transaction_fee,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${getCookie("token")}`,
+                    },
+                }
+            )
+            .then((response) => {
+                setIsLoading(false);
+                console.log(response);
+                window.open(response.data.paymentUrl, "_blank");
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                console.log(error.response);
+            });
+    };
     return (
         <Layout>
             <Container className={"min-h-screen"}>
-                <form className='bg-white shadow-md max-w-xl mx-auto p-6 border'>
+                <div className='bg-white shadow-md max-w-xl mx-auto p-6 border'>
                     <div>
-                        <Input
-                            label={"Nama Lengkap"}
-                            value={formikCreateTransaction.values.full_name}
-                            disabled={true}
-                        />
-                        <Input
-                            label={"Nomer Telepon"}
-                            value={formikCreateTransaction.values.phone_number}
-                            disabled={true}
-                        />
-                        <Input
-                            label={"Email"}
-                            value={formikCreateTransaction.values.email}
-                            disabled={true}
-                        />
-                    </div>
-                    <div>
-                        <Input
-                            label={"Program Wakaf"}
-                            value={formikCreateTransaction.values.title}
-                            disabled={true}
-                        />
-                        <div className='mb-4'>
-                            <p className='text-gray-500 tracking-wider '>
-                                Pilih Nominal Wakaf
-                            </p>
-                            <RadioGroup
-                                className={"flex flex-wrap"}
-                                value={choiceAmount}
-                                onChange={setChoiceAmount}>
-                                {choicesAmount.map((item, index) => (
-                                    <RadioGroup.Option key={index} value={item}>
-                                        {({ checked }) => (
-                                            <div className='flex cursor-pointer ml-1 mr-4 items-center space-x-2'>
-                                                <div
-                                                    className={classNames(
-                                                        "h-2 w-2 ring-1 ring-gray-400 ring-offset-2 rounded-full",
-                                                        checked
-                                                            ? "bg-secondary-500"
-                                                            : ""
-                                                    )}></div>
-                                                <span
-                                                    className={
-                                                        checked
-                                                            ? "text-secondary-500"
-                                                            : "text-gray-500"
-                                                    }>
-                                                    Rp {item}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </RadioGroup.Option>
-                                ))}
-                            </RadioGroup>
-                        </div>
                         <div>
-                            <p className='text-gray-500 tracking-wider '>
+                            <p className='text-gray-500 tracking-wider text-xl mb-4 font-medium'>
                                 Pilih Metode Pembayaran
                             </p>
                             <RadioGroup
@@ -143,7 +134,7 @@ export default function createtransaction({ project, paymentMethods }) {
                             </RadioGroup>
                         </div>
                     </div>
-                    <div className=' my-8 py-2 border-warning-500 border-y-2 border-dashed '>
+                    <div className=' my-8 py-2 border-primary-500 border-y-2 border-dashed '>
                         <div className='flex justify-between'>
                             <p className='text-sm'>Nominan wakaf</p>
                             <p className='text-sm'>
@@ -165,18 +156,44 @@ export default function createtransaction({ project, paymentMethods }) {
                                 Rp {selectedPaymentMethod.totalFee}
                             </p>
                         </div>
-                        <div className='flex justify-between'>
-                            <p className=' font-semibold'>Total Pembayaran</p>
-                            <p className=' font-semibold'>
+                        <div className='flex justify-between '>
+                            <p className=' font-semibold text-secondary-500'>
+                                Total Pembayaran
+                            </p>
+                            <p className=' font-semibold text-secondary-500'>
                                 Rp{" "}
                                 {parseInt(selectedPaymentMethod.totalFee) +
                                     parseInt(
                                         formikCreateTransaction.values.amount
-                                    )}
+                                    ) +
+                                    parseInt(project.maintenance_fee)}
                             </p>
                         </div>
                     </div>
-                </form>
+                    <Button
+                        onClick={handleCreateTransation}
+                        color={"secondary"}
+                        loading={isLoading}
+                        disabled={
+                            formikCreateTransaction.values.amount === "0" ||
+                            selectedPaymentMethod.totalFee === "0"
+                                ? true
+                                : false
+                        }>
+                        Lakukan Pembayaran
+                    </Button>
+                    {/* <button
+                        onClick={handleCreateTransation}
+                        disabled={
+                            formikCreateTransaction.values.amount === "0" ||
+                            selectedPaymentMethod.totalFee === "0"
+                                ? true
+                                : false
+                        }
+                        className='bg-secondary-500 disabled:bg-gray-400 text-white py-2.5 w-full shadow-lg rounded-md'>
+                        Lakukan Pembayaran
+                    </button> */}
+                </div>
             </Container>
         </Layout>
     );
@@ -184,7 +201,7 @@ export default function createtransaction({ project, paymentMethods }) {
 
 export async function getServerSideProps({ req, res, query }) {
     let project = [];
-    const { id } = query;
+    const { id, amount } = query;
     await axios.get(`/projects/${id}`).then((response) => {
         console.log(response.data.project);
         project = response.data.project;
@@ -194,7 +211,7 @@ export async function getServerSideProps({ req, res, query }) {
         .post(
             "/getpaymentmethod",
             {
-                amount: 20000,
+                amount,
             },
             {
                 headers: {
@@ -209,10 +226,12 @@ export async function getServerSideProps({ req, res, query }) {
         .catch((error) => {
             console.log(error.response);
         });
+    console.log(query);
     return {
         props: {
             project,
             paymentMethods,
+            amount,
         },
     };
 }

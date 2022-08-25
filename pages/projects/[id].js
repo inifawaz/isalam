@@ -1,6 +1,6 @@
-import { Tab } from "@headlessui/react";
+import { RadioGroup, Tab } from "@headlessui/react";
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Container from "../../components/Container";
 import Layout from "../../components/Layout";
 import ProjectItem from "../../components/ProjectItem";
@@ -17,9 +17,32 @@ import UpdateItem from "../../components/UpdateItem";
 import { BiTimer } from "react-icons/bi";
 import AppContext from "../../context/AppContext";
 import { useRouter } from "next/router";
+import { useFormik } from "formik";
+import * as yup from "yup";
+import { number } from "yup/lib/locale";
 
 export default function ProjectDetail({ project }) {
+    const elamount = useRef(null);
     const { bio, token } = useContext(AppContext);
+    const choicesAmount = [
+        project.first_choice_amount,
+        project.second_choice_amount,
+        project.third_choice_amount,
+        project.fourth_choice_amount,
+    ];
+    const [choiceAmount, setChoiceAmount] = useState("");
+
+    const formik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            amount: choiceAmount,
+        },
+        validationSchema: yup.object({
+            amount: yup
+                .number("harap isi dengan angka")
+                .required("silahkan isi nominal wakaf anda"),
+        }),
+    });
     const router = useRouter();
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
@@ -39,10 +62,18 @@ export default function ProjectDetail({ project }) {
         },
     ]);
     const handleBtnWakafSekarang = () => {
+        if (formik.values.amount === "") {
+            elamount.current.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
         if (!bio && !token) {
             router.push("/login");
         } else {
-            router.push(`/projects/${project.id}/create-transaction`);
+            router.push(
+                `/projects/${project.id}/create-transaction?amount=${formik.values.amount}`
+            );
         }
     };
     return (
@@ -137,6 +168,45 @@ export default function ProjectDetail({ project }) {
                             </Tab.Panel>
                         </Tab.Panels>
                     </Tab.Group>
+                    <div ref={elamount} className={`mt-4 md:pt-0  `}>
+                        <p className='text-gray-500 tracking-wider '>
+                            Pilih Nominal Wakaf
+                        </p>
+                        <RadioGroup
+                            className={"flex flex-wrap"}
+                            value={formik.values.amount}
+                            onChange={setChoiceAmount}>
+                            {choicesAmount.map((item, index) => (
+                                <RadioGroup.Option key={index} value={item}>
+                                    {({ checked }) => (
+                                        <button
+                                            className={classNames(
+                                                "text-xs py-1 px-3 mr-2 mt-2  ring-1 ring-gray-300",
+                                                checked
+                                                    ? "bg-secondary-500 text-white"
+                                                    : "bg-gray-100"
+                                            )}>
+                                            Rp {item}
+                                        </button>
+                                    )}
+                                </RadioGroup.Option>
+                            ))}
+                        </RadioGroup>
+                        <label className='relative block mt-4'>
+                            <span className='sr-only'>Search</span>
+                            <span className='absolute inset-y-0 text-sm left-0 flex items-center pl-3 text-gray-700'>
+                                Rp
+                            </span>
+                            <input
+                                name='amount'
+                                type='text'
+                                value={formik.values.amount}
+                                onChange={formik.handleChange}
+                                className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-gray-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-secondary-300 focus:ring-secondary-200 focus:ring sm:text-sm text-sm focus:ring-opacity-50'
+                                placeholder='atau masukkan nominal wakaf disini'
+                            />
+                        </label>
+                    </div>
                     <div className='  md:static sticky bottom-0 z-10    py-4 md:py-6'>
                         <button
                             onClick={handleBtnWakafSekarang}
@@ -203,6 +273,45 @@ export default function ProjectDetail({ project }) {
                                     {project.days_target} hari lagi
                                 </p>
                             </div>
+                        </div>
+                        <div className='mt-4'>
+                            <p className='text-gray-500 tracking-wider '>
+                                Pilih Nominal Wakaf
+                            </p>
+                            <RadioGroup
+                                className={"flex flex-wrap"}
+                                value={formik.values.amount}
+                                onChange={setChoiceAmount}>
+                                {choicesAmount.map((item, index) => (
+                                    <RadioGroup.Option key={index} value={item}>
+                                        {({ checked }) => (
+                                            <button
+                                                className={classNames(
+                                                    "text-xs py-1 px-3 mr-2 mt-2  ring-1 ring-gray-300",
+                                                    checked
+                                                        ? "bg-secondary-500 text-white"
+                                                        : "bg-gray-100"
+                                                )}>
+                                                Rp {item}
+                                            </button>
+                                        )}
+                                    </RadioGroup.Option>
+                                ))}
+                            </RadioGroup>
+                            <label className='relative block mt-4'>
+                                <span className='sr-only'>Search</span>
+                                <span className='absolute inset-y-0 text-sm left-0 flex items-center pl-3 text-gray-700'>
+                                    Rp
+                                </span>
+                                <input
+                                    name='amount'
+                                    type='text'
+                                    value={formik.values.amount}
+                                    onChange={formik.handleChange}
+                                    className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-gray-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-secondary-300 focus:ring-secondary-200 focus:ring sm:text-sm text-sm focus:ring-opacity-50'
+                                    placeholder='atau masukkan nominal wakaf disini'
+                                />
+                            </label>
                         </div>
                         <button
                             onClick={handleBtnWakafSekarang}
