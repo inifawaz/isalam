@@ -14,7 +14,11 @@ export default function ProjectItem({ data }) {
         <Link href={`/projects/${data.id}`}>
             <div className=' cursor-pointer'>
                 <div className='relative shadow-md aspect-square'>
-                    <Image src={data.picture_url} layout='fill' />
+                    <Image
+                        src={data.picture_url}
+                        layout='fill'
+                        alt='project image'
+                    />
                 </div>
                 <div className='p-4 bg-white border shadow-md'>
                     <div className='flex space-x-4 items-center'>

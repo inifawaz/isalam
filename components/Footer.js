@@ -14,7 +14,11 @@ export default function Footer() {
                 <div className='w-80'>
                     <Link href={"/"}>
                         <div className=' relative cursor-pointer  w-40  mb-4'>
-                            <Image src={isalamLight} layout='responsive' />
+                            <Image
+                                src={isalamLight}
+                                layout='responsive'
+                                alt='isalam logo'
+                            />
                         </div>
                     </Link>
                     <p className='text-gray-400'>

@@ -74,7 +74,11 @@ export default function Header() {
             <Container className={"flex justify-between items-center "}>
                 <Link href={"/"}>
                     <div className=' relative cursor-pointer  w-32  '>
-                        <Image src={isalamDark} layout='responsive' />
+                        <Image
+                            src={isalamDark}
+                            layout='responsive'
+                            alt='isalam logo'
+                        />
                     </div>
                 </Link>
 

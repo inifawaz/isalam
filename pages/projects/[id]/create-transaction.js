@@ -10,19 +10,13 @@ import { getCookie } from "cookies-next";
 import Image from "next/image";
 import Button from "../../../components/Button";
 
-export default function createtransaction({ project, paymentMethods, amount }) {
+export default function Createtransaction({ project, paymentMethods, amount }) {
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
     const { bio, token } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
-    const choicesAmount = [
-        project.first_choice_amount,
-        project.second_choice_amount,
-        project.third_choice_amount,
-        project.fourth_choice_amount,
-    ];
-    const [choiceAmount, setChoiceAmount] = useState("0");
+
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
         paymentMethod: "",
         paymentName: "",
@@ -115,6 +109,7 @@ export default function createtransaction({ project, paymentMethods, amount }) {
                                                             }
                                                             layout='fill'
                                                             objectFit='contain'
+                                                            alt='payment image'
                                                         />
                                                     </div>
                                                 </div>
@@ -182,17 +177,6 @@ export default function createtransaction({ project, paymentMethods, amount }) {
                         }>
                         Lakukan Pembayaran
                     </Button>
-                    {/* <button
-                        onClick={handleCreateTransation}
-                        disabled={
-                            formikCreateTransaction.values.amount === "0" ||
-                            selectedPaymentMethod.totalFee === "0"
-                                ? true
-                                : false
-                        }
-                        className='bg-secondary-500 disabled:bg-gray-400 text-white py-2.5 w-full shadow-lg rounded-md'>
-                        Lakukan Pembayaran
-                    </button> */}
                 </div>
             </Container>
         </Layout>
