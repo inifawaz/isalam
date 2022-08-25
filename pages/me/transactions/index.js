@@ -10,7 +10,7 @@ import TransactionItem from "../../../components/TransactionItem";
 import AppContext from "../../../context/AppContext";
 import { axios } from "../../../lib/axiosInstance";
 
-export default function index({ transactions }) {
+export default function Index({ transactions }) {
     const { pageLoading } = useContext(AppContext);
 
     return (
