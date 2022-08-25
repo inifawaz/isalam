@@ -6,7 +6,7 @@ import ProjectItem from "../components/ProjectItem";
 import AppContext from "../context/AppContext";
 import { axios } from "../lib/axiosInstance";
 
-export default function index({ projects }) {
+export default function Index({ projects }) {
     const { pageLoading, setPageLoading } = useContext(AppContext);
 
     useEffect(() => {
