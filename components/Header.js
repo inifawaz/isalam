@@ -95,6 +95,7 @@ export default function Header() {
                                         <Image
                                             src={bio.avatar_url}
                                             layout='fill'
+                                            alt='avatar'
                                         />
                                     </div>
                                     <div className='hidden md:block'>
