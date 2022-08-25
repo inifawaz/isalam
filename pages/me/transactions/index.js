@@ -21,7 +21,9 @@ export default function index({ transactions }) {
                 <div></div>
                 <div className='col-span-3'>
                     {transactions.map((item, index) => (
-                        <div className='p-6 shadow-md border flex justify-between items-center'>
+                        <div
+                            key={index}
+                            className='p-6 shadow-md border flex justify-between items-center'>
                             <div>
                                 <div className='text-xs p-1'>
                                     {item.response_status_message}
