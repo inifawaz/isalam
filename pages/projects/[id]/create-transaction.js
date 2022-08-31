@@ -9,8 +9,10 @@ import { RadioGroup } from "@headlessui/react";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 import Button from "../../../components/Button";
+import { useRouter } from "next/router";
 
 export default function Createtransaction({ project, paymentMethods, amount }) {
+    const router = useRouter();
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
@@ -66,6 +68,7 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                 setIsLoading(false);
                 console.log(response);
                 window.open(response.data.paymentUrl, "_blank");
+                router.push("/");
             })
             .catch((error) => {
                 setIsLoading(false);

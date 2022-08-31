@@ -6,37 +6,42 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const router = useRouter();
-    const [bio, setBio] = useState(false);
+    const [user, setUser] = useState(false);
     const [token, setToken] = useState(false);
     const [pageLoading, setPageLoading] = useState(false);
-    const checkToken = async () => {
+    const checkAuth = async () => {
         await axios
             .get("/me", {
                 headers: {
                     Authorization: `Bearer ${getCookie("token")}`,
                 },
             })
-            .then((response) => {})
+            .then((response) => {
+                console.log(response);
+            })
             .catch((error) => {
                 if (error.response.status === 401) {
                     deleteCookie("token");
-                    deleteCookie("bio");
+                    deleteCookie("user");
+                    setUser(false);
+                    setToken(false);
                     router.push("/login");
                 }
             });
     };
     useEffect(() => {
-        if (getCookie("token") && getCookie("bio")) {
-            setBio(JSON.parse(getCookie("bio")));
+        setPageLoading(false);
+        if (getCookie("token") && getCookie("user")) {
+            setUser(JSON.parse(getCookie("user")));
             setToken(getCookie("token"));
-            checkToken();
+            checkAuth();
         }
     }, []);
     return (
         <AppContext.Provider
             value={{
-                bio,
-                setBio,
+                user,
+                setUser,
                 token,
                 setToken,
                 pageLoading,

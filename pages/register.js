@@ -4,16 +4,16 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import Button from "../components/Button";
 import { axios } from "../lib/axiosInstance";
-import { getCookie, setCookie } from "cookies-next";
+import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import Container from "../components/Container";
 import Input from "../components/Input";
 import AppContext from "../context/AppContext";
 
-export default function Login() {
-    const { setUser, setToken } = useContext(AppContext);
-    const formikLogin = useFormik({
+export default function Register() {
+    const { setBio, setToken } = useContext(AppContext);
+    const formikRegister = useFormik({
         initialValues: {
             email: "",
             password: "",
@@ -23,36 +23,30 @@ export default function Login() {
             password: yup.string().required("password tidak boleh kosong"),
         }),
         onSubmit: (values) => {
-            handleLogin(values);
+            handleRegister(values);
         },
     });
 
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState("");
-    const handleLogin = async (values) => {
+    const handleRegister = async (values) => {
         setMessage("");
         setIsLoading(true);
         await axios
-            .post("/login", values)
+            .post("/Register", values)
             .then((response) => {
                 console.log(response);
                 const token = response.data.token;
-                const user = response.data.user;
+                const bio = response.data.user.bio;
                 setCookie("token", token);
-                setCookie("user", user);
-
-                setUser(JSON.parse(getCookie("user")));
-                setToken(getCookie("token"));
-                if (user.role == "admin") {
-                    router.push("/admin");
-                } else {
-                    router.push("/");
-                }
+                setCookie("bio", bio);
+                setBio(bio);
+                setToken(token);
+                router.push("/");
             })
             .catch((error) => {
                 setMessage(error.response.data.message);
-                console.log(error);
             })
             .finally(() => {
                 setIsLoading(false);
@@ -63,7 +57,7 @@ export default function Login() {
         <Layout>
             <Container className={"flex items-center justify-center pt-40"}>
                 <form
-                    onSubmit={formikLogin.handleSubmit}
+                    onSubmit={formikRegister.handleSubmit}
                     className='max-w-sm w-full rounded-md shadow-md border p-8'>
                     {message && (
                         <div className='bg-warning-50 text-sm p-3 mb-4 text-warning-500'>
@@ -75,34 +69,34 @@ export default function Login() {
                             label={"Email"}
                             type='email'
                             name={"email"}
-                            value={formikLogin.values.email}
-                            onBlur={formikLogin.handleBlur}
-                            onChange={formikLogin.handleChange}
+                            value={formikRegister.values.email}
+                            onBlur={formikRegister.handleBlur}
+                            onChange={formikRegister.handleChange}
                             error={
-                                formikLogin.touched.email &&
-                                formikLogin.errors.email
+                                formikRegister.touched.email &&
+                                formikRegister.errors.email
                             }
                         />
                         <Input
                             label={"Password"}
                             type='password'
                             name={"password"}
-                            value={formikLogin.values.password}
-                            onBlur={formikLogin.handleBlur}
-                            onChange={formikLogin.handleChange}
+                            value={formikRegister.values.password}
+                            onBlur={formikRegister.handleBlur}
+                            onChange={formikRegister.handleChange}
                             error={
-                                formikLogin.touched.password &&
-                                formikLogin.errors.password
+                                formikRegister.touched.password &&
+                                formikRegister.errors.password
                             }
                         />
                     </div>
 
-                    <Button loading={isLoading}>Masuk</Button>
+                    <Button loading={isLoading}>Daftar</Button>
                     <div className='text-center mt-8'>
                         <small className='text-gray-500'>
-                            belum punya akun?{" "}
+                            sudah punya akun?{" "}
                             <span className='font-medium text-primary-500 cursor-pointer'>
-                                daftar sekarang
+                                masuk sekarang
                             </span>
                         </small>
                     </div>

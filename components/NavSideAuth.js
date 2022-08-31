@@ -20,7 +20,7 @@ export default function NavSideAuth() {
             text: "Program Wakaf",
         },
         {
-            href: "/about",
+            href: "/me/setting",
             text: "Atur Profile",
         },
     ];
@@ -67,7 +67,7 @@ export default function NavSideAuth() {
                     <Link key={index} href={item.href}>
                         <a
                             className={
-                                "block p-2 rounded-md transition-all hover:bg-gray-100"
+                                "block p-1 rounded-md transition-all hover:bg-gray-100"
                             }>
                             {item.text}
                         </a>
@@ -76,7 +76,7 @@ export default function NavSideAuth() {
                 <button
                     onClick={handleLogout}
                     className={
-                        "block bg-primary-100 text-primary-600 p-1.5 w-full rounded-md transition-all hover:bg-gray-100"
+                        "block   p-1 text-left w-full rounded-md transition-all hover:bg-gray-100"
                     }>
                     Keluar
                 </button>

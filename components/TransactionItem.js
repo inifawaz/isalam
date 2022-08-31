@@ -29,6 +29,7 @@ export default function Transactiondata({ data }) {
         statusMessage: "",
     });
     const checktransactionstatus = async () => {
+        setPageLoading(true);
         await axios
             .post(
                 "/checktransactionstatus",
@@ -42,6 +43,7 @@ export default function Transactiondata({ data }) {
                 }
             )
             .then((response) => {
+                setPageLoading(false);
                 console.log(response.data);
                 setTransactionStatus(response.data);
             });

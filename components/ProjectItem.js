@@ -16,7 +16,7 @@ export default function ProjectItem({ data }) {
         <Link href={`/projects/${data.id}`}>
             <div
                 onClick={() => setPageLoading(true)}
-                className=' cursor-pointer'>
+                className=' h-fit cursor-pointer'>
                 <div className='relative shadow-md aspect-square'>
                     <Image
                         src={data.picture_url}
@@ -39,16 +39,16 @@ export default function ProjectItem({ data }) {
                             </p>
                         </div>
                     </div>
-                    <h1 className='text-primary-600 my-1 text-lg font-medium'>
-                        {data.title}
+                    <h1 className='text-primary-600 my-1 text-lg font-medium '>
+                        {data.name}
                     </h1>
                     <div className='flex justify-between items-center'>
                         <div>
                             <p className='text-xs text-gray-400 leading-none'>
-                                Terkumpul (45%)
+                                Terkumpul ({data.amount_collected_percent})
                             </p>
                             <p className='text-sm text-emerald-500'>
-                                Rp 4.500.000
+                                Rp {data.amount_collected}
                             </p>
                         </div>
                         <div>
@@ -56,7 +56,7 @@ export default function ProjectItem({ data }) {
                                 Target
                             </p>
                             <p className='text-sm text-primary-600'>
-                                Rp 10.000.000
+                                Rp {data.target_amount}
                             </p>
                         </div>
                     </div>
@@ -66,12 +66,14 @@ export default function ProjectItem({ data }) {
                     <div className='flex justify-between items-center mt-2'>
                         <div className='flex items-center space-x-1'>
                             <HiOutlineUserGroup className='text-gray-400' />
-                            <p className='text-xs text-gray-400'>64 Pewakaf</p>
+                            <p className='text-xs text-gray-400'>
+                                {data.backers_count} Pewakaf
+                            </p>
                         </div>
                         <div className='flex items-center space-x-1'>
                             <BiTimer size={"1.2em"} className='text-gray-400' />
                             <p className='text-xs text-gray-400'>
-                                {data.days_target} hari lagi
+                                {data.days_left} hari lagi
                             </p>
                         </div>
                     </div>

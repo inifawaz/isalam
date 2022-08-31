@@ -22,20 +22,15 @@ import * as yup from "yup";
 import { number } from "yup/lib/locale";
 import PageLoading from "../../components/PageLoading";
 import Button from "../../components/Button";
+import { data } from "autoprefixer";
 
 export default function ProjectDetail({ project }) {
     const { pageLoading, setPageLoading } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
     const elamount = useRef(null);
     const { bio, token } = useContext(AppContext);
-    const choicesAmount = [
-        project.first_choice_amount,
-        project.second_choice_amount,
-        project.third_choice_amount,
-        project.fourth_choice_amount,
-    ];
-    const [choiceAmount, setChoiceAmount] = useState("");
 
+    const [choiceAmount, setChoiceAmount] = useState("");
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -53,15 +48,11 @@ export default function ProjectDetail({ project }) {
     }
     const [tabs, setTabs] = useState([
         {
-            text: "Cerita",
-            count: 0,
-        },
-        {
-            text: "Update",
-            count: 0,
-        },
-        {
             text: "Pewakaf",
+            count: 0,
+        },
+        {
+            text: "Informasi Terbaru",
             count: 0,
         },
     ]);
@@ -97,8 +88,8 @@ export default function ProjectDetail({ project }) {
                             <Image src={project.picture_url} layout='fill' />
                         </div> */}
                         <ProjectItem data={project} />
-                        <div className='md:p-6 p-4 border bg-white shadow-md'>
-                            <p>{project.caption}</p>
+                        <div className='p-4 bg-white border w-full shadow-md'>
+                            <p>{project.description}</p>
                         </div>
                     </div>
                     <Tab.Group
@@ -125,58 +116,17 @@ export default function ProjectDetail({ project }) {
                             ))}
                         </Tab.List>
                         <Tab.Panels className={"md:p-6 p-4"}>
-                            <Tab.Panel>
-                                <h1 className='text-xl text-gray-600 tracking-wider mb-2'>
-                                    Lorem ipsum dolor sit amet consectetur.
-                                </h1>
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit. Dolor culpa optio
-                                    accusantium? Nam debitis, aut ab at voluptas
-                                    soluta eos distinctio qui eum rem totam
-                                    beatae consequatur et quod sint,
-                                    exercitationem dignissimos consequuntur
-                                    <br />
-                                    <br />
-                                    commodi veritatis dolor perferendis dolores?
-                                    Eius deserunt, dolore, incidunt id deleniti
-                                    ab dolores necessitatibus debitis, iusto
-                                    odio minima rerum? Nam sapiente asperiores
-                                    quas maiores iure dolorum earum libero
-                                    tempore veritatis, incidunt animi minus
-                                    omnis eaque quae itaque, iusto ab beatae
-                                    quasi adipisci numquam explicabo aperiam
-                                    <br />
-                                    <br />
-                                    corporis doloribus? Cum voluptas molestiae
-                                    adipisci officiis et veniam, ea fugiat totam
-                                    necessitatibus, alias obcaecati praesentium
-                                    commodi animi ratione voluptates quisquam
-                                    maiores eum non recusandae unde nemo
-                                    <br />
-                                    <br />
-                                    aspernatur earum harum architecto! Aut
-                                    aliquam, quod, totam amet nulla pariatur
-                                    unde eveniet delectus magnam tenetur atque.
-                                    Nisi reiciendis, eveniet quos dolorum
-                                    inventore unde sunt possimus laborum,
-                                    voluptatem aliquam illum! Tenetur laborum
-                                    vero accusamus perferendis et similique
-                                    reiciendis repellendus, magni fugiat qui
-                                    excepturi numquam necessitatibus.
-                                </p>
-                            </Tab.Panel>
-                            <Tab.Panel>
-                                <ol className='border-l relative  border-black'>
-                                    <UpdateItem />
-                                    <UpdateItem />
-                                    <UpdateItem />
-                                </ol>
-                            </Tab.Panel>
                             <Tab.Panel className={"flex flex-col divide-y-2"}>
-                                <PewakafItem />
-                                <PewakafItem />
-                                <PewakafItem />
+                                {project.backers.map((item, index) => (
+                                    <PewakafItem data={item} />
+                                ))}
+                            </Tab.Panel>
+                            <Tab.Panel>
+                                <ol className='border-l relative  border-gray-300'>
+                                    {project.updates.map((item, index) => (
+                                        <UpdateItem data={item} />
+                                    ))}
+                                </ol>
                             </Tab.Panel>
                         </Tab.Panels>
                     </Tab.Group>
@@ -188,7 +138,7 @@ export default function ProjectDetail({ project }) {
                             className={"flex flex-wrap"}
                             value={formik.values.amount}
                             onChange={setChoiceAmount}>
-                            {choicesAmount.map((item, index) => (
+                            {project.choice_amount.map((item, index) => (
                                 <RadioGroup.Option key={index} value={item}>
                                     {({ checked }) => (
                                         <button
@@ -232,7 +182,7 @@ export default function ProjectDetail({ project }) {
                 </div>
                 <div className='col-span-2 hidden md:block'>
                     <div className='p-4 md:p-6 sticky top-[58px] bg-white border shadow-md'>
-                        <div className='flex space-x-4 items-center'>
+                        <div className='flex space-x-4 items-center mb-2'>
                             <div className='flex items-center space-x-1'>
                                 <HiOutlineTag className='text-gray-400' />
                                 <p className='text-xs text-gray-400'>
@@ -283,7 +233,7 @@ export default function ProjectDetail({ project }) {
                                     className='text-gray-400'
                                 />
                                 <p className='text-xs text-gray-400'>
-                                    {project.days_target} hari lagi
+                                    {project.days_left} hari lagi
                                 </p>
                             </div>
                         </div>
@@ -295,7 +245,7 @@ export default function ProjectDetail({ project }) {
                                 className={"flex flex-wrap"}
                                 value={formik.values.amount}
                                 onChange={setChoiceAmount}>
-                                {choicesAmount.map((item, index) => (
+                                {project.choice_amount.map((item, index) => (
                                     <RadioGroup.Option key={index} value={item}>
                                         {({ checked }) => (
                                             <button

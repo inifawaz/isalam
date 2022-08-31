@@ -7,6 +7,7 @@ const nextConfig = {
             "placekitten.com",
             "api.isalamwakaf.com",
             "images.duitku.com",
+            "127.0.0.1",
         ],
     },
 };

@@ -12,7 +12,6 @@ import { axios } from "../../../lib/axiosInstance";
 
 export default function Index({ transactions }) {
     const { pageLoading } = useContext(AppContext);
-
     return (
         <Layout>
             {pageLoading && <PageLoading />}

@@ -20,6 +20,10 @@ const navigations = [
         text: "Wakaf",
     },
     {
+        href: "/articles",
+        text: "Artikel",
+    },
+    {
         href: "/about",
         text: "Tentang Kami",
     },
@@ -35,16 +39,17 @@ const navigationsAuth = [
         text: "Program Wakaf",
     },
     {
-        href: "/about",
+        href: "/me/setting",
         text: "Atur Profile",
     },
 ];
 
 export default function Header() {
-    const { bio, token, setBio, setToken } = useContext(AppContext);
+    const { user, token, setUser, setToken } = useContext(AppContext);
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
+
     const router = useRouter();
     const handleLogout = async () => {
         await axios
@@ -60,8 +65,8 @@ export default function Header() {
             .then((response) => {
                 console.log(response);
                 deleteCookie("token");
-                deleteCookie("bio");
-                setBio(false);
+                deleteCookie("user");
+                setUser(false);
                 setToken(false);
                 router.push("/");
             })
@@ -86,24 +91,24 @@ export default function Header() {
                     <Menu
                         as={"div"}
                         className={`relative order-1  ${
-                            bio && token ? "" : "md:hidden"
+                            user && token ? "" : "md:hidden"
                         }`}>
                         <Menu.Button as='div' className={"cursor-pointer ml-8"}>
-                            {bio && token ? (
+                            {user && token ? (
                                 <div className='flex items-center space-x-1'>
                                     <div className='relative h-8 w-8 rounded-full overflow-hidden shadow-lg border'>
                                         <Image
-                                            src={bio.avatar_url}
+                                            src={user.avatar_url}
                                             layout='fill'
                                             alt='avatar'
                                         />
                                     </div>
                                     <div className='hidden md:block'>
                                         <p className='text-sm leading-none'>
-                                            {bio.full_name}
+                                            {user.full_name}
                                         </p>
                                         <p className='text-xs leading-none'>
-                                            {bio.email}
+                                            {user.email}
                                         </p>
                                     </div>
                                 </div>
@@ -138,7 +143,7 @@ export default function Header() {
                                     )}
                                 </Menu.Item>
                             ))}
-                            {bio && token && (
+                            {user && token && (
                                 <>
                                     {navigationsAuth.map((item, index) => (
                                         <Menu.Item key={index}>
@@ -176,7 +181,7 @@ export default function Header() {
                                 </>
                             )}
 
-                            {!bio && !token && (
+                            {!user && !token && (
                                 <div className='flex justify-between space-x-2'>
                                     <Menu.Item>
                                         {({ active }) => (
@@ -197,6 +202,9 @@ export default function Header() {
                                     <Menu.Item>
                                         {({ active }) => (
                                             <button
+                                                onClick={() => {
+                                                    router.push("/register");
+                                                }}
                                                 className={classNames(
                                                     "bg-primary-500 text-white p-1.5 w-full rounded-md transition-all",
                                                     active
@@ -218,14 +226,18 @@ export default function Header() {
                                 <a>{item.text}</a>
                             </Link>
                         ))}
-                        {!bio && !token && (
+                        {!user && !token && (
                             <div className='space-x-2'>
                                 <button
                                     onClick={() => router.push("/login")}
                                     className='bg-primary-100 text-primary-600 hover:bg-primary-200 p-1.5 w-16 rounded-md transition-all'>
                                     Masuk
                                 </button>
-                                <button className='bg-primary-500 text-white hover:bg-primary-600 p-1.5 w-16 rounded-md transition-all'>
+                                <button
+                                    onClick={() => {
+                                        router.push("/register");
+                                    }}
+                                    className='bg-primary-500 text-white hover:bg-primary-600 p-1.5 w-16 rounded-md transition-all'>
                                     Daftar
                                 </button>
                             </div>

@@ -10,11 +10,14 @@ export default function Input({
     onBlur,
     disabled,
     error,
+    placeholder,
+    accept,
 }) {
     return (
         <label className='block relative mb-4'>
             <span className='text-gray-500 tracking-wider '>{label}</span>
             <input
+                accept={accept}
                 type={type}
                 name={name}
                 value={value}
@@ -22,6 +25,7 @@ export default function Input({
                 onChange={onChange}
                 onBlur={onBlur}
                 disabled={disabled}
+                placeholder={placeholder}
                 className={`
                     ${label ? "mt-1" : ""}
                     disabled:bg-gray-100
@@ -32,9 +36,9 @@ export default function Input({
                     rounded-md
                     border-gray-300
                     shadow-sm
+                    placeholder:text-gray-300
                     focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50
                     `}
-                placeholder=''
             />
             {error && (
                 <small className='absolute text-warning-400'>{error}</small>
