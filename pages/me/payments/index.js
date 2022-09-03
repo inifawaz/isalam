@@ -6,11 +6,11 @@ import Container from "../../../components/Container";
 import Layout from "../../../components/Layout";
 import NavSideAuth from "../../../components/NavSideAuth";
 import PageLoading from "../../../components/PageLoading";
-import TransactionItem from "../../../components/TransactionItem";
+import PaymentItem from "../../../components/PaymentItem";
 import AppContext from "../../../context/AppContext";
 import { axios } from "../../../lib/axiosInstance";
 
-export default function Index({ transactions }) {
+export default function Index({ payments }) {
     const { pageLoading } = useContext(AppContext);
     return (
         <Layout>
@@ -21,8 +21,8 @@ export default function Index({ transactions }) {
                 </div>
                 <div className='col-span-3'>
                     <h1 className='text-2xl text-gray-600 mb-4'>Pembayaran</h1>
-                    {transactions.map((item, index) => (
-                        <TransactionItem data={item} key={index} />
+                    {payments.map((item, index) => (
+                        <PaymentItem data={item} key={index} />
                     ))}
                 </div>
             </Container>
@@ -31,21 +31,19 @@ export default function Index({ transactions }) {
 }
 
 export async function getServerSideProps({ req, res }) {
-    let transactions = [];
-    const bio = JSON.parse(getCookie("bio", { req, res }));
+    let payments = [];
+    const user = JSON.parse(getCookie("user", { req, res }));
 
-    const { data } = await axios.get("/transactioninquiries", {
+    const { data } = await axios.get("/payments", {
         headers: {
             Authorization: `Bearer ${getCookie("token", { req, res })}`,
         },
     });
-    const myTransaction = data.filter((e) => e.email == bio.email);
-
-    transactions = myTransaction.reverse();
-    console.log(transactions);
+    payments = data;
+    console.log(payments);
     return {
         props: {
-            transactions,
+            payments,
         },
     };
 }

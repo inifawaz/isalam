@@ -45,7 +45,7 @@ export default function ProjectItem({ data }) {
                     <div className='flex justify-between items-center'>
                         <div>
                             <p className='text-xs text-gray-400 leading-none'>
-                                Terkumpul ({data.amount_collected_percent})
+                                Terkumpul ({data.amount_collected_percent}%)
                             </p>
                             <p className='text-sm text-emerald-500'>
                                 Rp {data.amount_collected}

@@ -7,16 +7,16 @@ import { axios } from "../lib/axiosInstance";
 import { useRouter } from "next/router";
 
 export default function NavSideAuth() {
-    const { bio, setBio, setToken } = useContext(AppContext);
+    const { user, setUser, setToken } = useContext(AppContext);
     const router = useRouter();
 
     const navigationsAuth = [
         {
-            href: "/me/transactions",
+            href: "/me/payments",
             text: "Pembayaran",
         },
         {
-            href: "/",
+            href: "/me/projects",
             text: "Program Wakaf",
         },
         {
@@ -38,10 +38,10 @@ export default function NavSideAuth() {
             .then((response) => {
                 console.log(response);
                 deleteCookie("token");
-                deleteCookie("bio");
+                deleteCookie("user");
                 router.push("/");
 
-                setBio(false);
+                setuser(false);
                 setToken(false);
             })
             .catch((error) => {
@@ -55,11 +55,11 @@ export default function NavSideAuth() {
         <div className='p-4 bg-white border sticky top-[58px] rounded-md shadow-md'>
             <div className='flex items-center space-x-1'>
                 <div className='relative h-8 w-8 rounded-full overflow-hidden shadow-lg border'>
-                    <Image src={bio.avatar_url} layout='fill' alt='avatar' />
+                    <Image src={user.avatar_url} layout='fill' alt='avatar' />
                 </div>
                 <div className='hidden md:block'>
-                    <p className=' leading-none'>{bio.full_name}</p>
-                    <p className='text-sm leading-none'>{bio.email}</p>
+                    <p className=' leading-none'>{user.full_name}</p>
+                    <p className='text-sm leading-none'>{user.email}</p>
                 </div>
             </div>
             <div className='mt-4'>

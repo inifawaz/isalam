@@ -20,10 +20,108 @@ export default function Index({ projects }) {
                     </a>
                 </Link>
             </Container>
-            <Container className={"grid md:grid-cols-3 gap-8"}>
-                {projects.map((item, index) => (
-                    <ProjectItem data={item} />
-                ))}
+            <Container className={""}>
+                <div className='shadow border rounded-md overflow-auto'>
+                    <table className='w-full table-auto '>
+                        <thead className='bg-sky-600'>
+                            <tr>
+                                <th className='text-white text-left p-2 font-medium'>
+                                    Nama
+                                </th>
+                                <th className='text-white text-left p-2 font-medium whitespace-nowrap'>
+                                    Terkumpul
+                                </th>
+                                <th className='text-white text-left p-2 font-medium whitespace-nowrap'>
+                                    Target
+                                </th>
+                                <th className='text-white text-left p-2 font-medium whitespace-nowrap'>
+                                    Mulai
+                                </th>
+                                <th className='text-white text-left p-2 font-medium whitespace-nowrap'>
+                                    Berakhir
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className='divide-y'>
+                            <tr className='odd:bg-primary-50 even:bg-white'>
+                                <td className='p-2 text-gray-500 whitespace-nowrap md:whitespace-normal'>
+                                    Lorem, ipsum dolor sit amet consectetur
+                                    adipisicing elit. Officia harum alias
+                                    expedita itaque magnam?
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 4.500.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 20.000.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/09/2022
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/10/2022
+                                </td>
+                            </tr>
+                            <tr className='odd:bg-primary-50 even:bg-white'>
+                                <td className='p-2 text-gray-500 whitespace-nowrap md:whitespace-normal'>
+                                    Lorem, ipsum dolor sit amet consectetur
+                                    adipisicing elit. Officia harum alias
+                                    expedita itaque magnam?
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 4.500.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 20.000.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/09/2022
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/10/2022
+                                </td>
+                            </tr>
+                            <tr className='odd:bg-primary-50 even:bg-white'>
+                                <td className='p-2 text-gray-500 whitespace-nowrap md:whitespace-normal'>
+                                    Lorem, ipsum dolor sit amet consectetur
+                                    adipisicing elit. Officia harum alias
+                                    expedita itaque magnam?
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 4.500.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 20.000.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/09/2022
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/10/2022
+                                </td>
+                            </tr>
+                            <tr className='odd:bg-primary-50 even:bg-white'>
+                                <td className='p-2 text-gray-500 whitespace-nowrap md:whitespace-normal'>
+                                    Lorem, ipsum dolor sit amet consectetur
+                                    adipisicing elit. Officia harum alias
+                                    expedita itaque magnam?
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 4.500.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    Rp 20.000.000
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/09/2022
+                                </td>
+                                <td className='p-2 text-gray-500 whitespace-nowrap'>
+                                    28/10/2022
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </Container>
             <div></div>
         </Layout>

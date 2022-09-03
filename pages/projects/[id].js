@@ -70,7 +70,7 @@ export default function ProjectDetail({ project }) {
         } else {
             if (formik.values.amount === "") return;
             router.push(
-                `/projects/${project.id}/create-transaction?amount=${formik.values.amount}`
+                `/projects/${project.id}/create-payment?amount=${formik.values.amount}`
             );
         }
     };

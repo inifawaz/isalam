@@ -16,7 +16,7 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
-    const { bio, token } = useContext(AppContext);
+    const { user, token } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
@@ -28,9 +28,9 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
     const formikCreateTransaction = useFormik({
         enableReinitialize: true,
         initialValues: {
-            full_name: bio.full_name,
-            phone_number: bio.phone_number,
-            email: bio.email,
+            full_name: user.full_name,
+            phone_number: user.phone_number,
+            email: user.email,
             title: project.title,
             amount: amount,
         },
@@ -39,24 +39,23 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
     const handleCreateTransation = async () => {
         setIsLoading(true);
         const project_id = project.id;
-        const payment_amount =
-            parseInt(formikCreateTransaction.values.amount) +
-            parseInt(project.maintenance_fee);
-        const payment_method = selectedPaymentMethod.paymentMethod;
+        const project_amount_given = parseInt(
+            formikCreateTransaction.values.amount
+        );
+
+        const paymentMethod = selectedPaymentMethod.paymentMethod;
         const transaction_fee = 0;
         console.log(project_id);
-        console.log(payment_amount);
-        console.log(payment_method);
-        console.log(transaction_fee);
+        console.log(project_amount_given);
+        console.log(paymentMethod);
 
         await axios
             .post(
-                "/transactioninquiries/create",
+                "/payments",
                 {
                     project_id,
-                    payment_amount,
-                    payment_method,
-                    transaction_fee,
+                    project_amount_given,
+                    paymentMethod,
                 },
                 {
                     headers: {
@@ -67,12 +66,15 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
             .then((response) => {
                 setIsLoading(false);
                 console.log(response);
-                window.open(response.data.paymentUrl, "_blank");
+                window.open(response.data.payment.payment_url, "_blank");
                 router.push("/");
             })
             .catch((error) => {
                 setIsLoading(false);
                 console.log(error.response);
+            })
+            .finally(() => {
+                setIsLoading(false);
             });
     };
     return (
@@ -208,7 +210,7 @@ export async function getServerSideProps({ req, res, query }) {
         )
         .then((response) => {
             console.log(response.data.payment_method);
-            paymentMethods = response.data.payment_method;
+            paymentMethods = response.data.payment_methods;
         })
         .catch((error) => {
             console.log(error.response);

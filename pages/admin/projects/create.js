@@ -4,6 +4,8 @@ import AdminNav from "../../../components/AdminNav";
 import Container from "../../../components/Container";
 import Input from "../../../components/Input";
 import Layout from "../../../components/Layout";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 export default function CreateProject() {
     const [fileDataURL, setFileDataURL] = useState(null);
@@ -31,7 +33,12 @@ export default function CreateProject() {
         <Layout>
             <AdminNav />
             <Container>
-                <form action=''>
+                <h2 className='text-3xl text-primary-600'>
+                    Buat Program Wakaf Baru
+                </h2>
+            </Container>
+            <Container>
+                <form className=''>
                     <Input
                         label={"Nama Program Wakaf"}
                         name='name'
@@ -191,6 +198,27 @@ export default function CreateProject() {
                                     : "https://via.placeholder.com/320.png?text=foto"
                             }
                             alt=''
+                        />
+                    </div>
+                    <div className='mt-8 min-h-screen'>
+                        <p>Deskripsi Program Wakaf</p>
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data=''
+                            onReady={(editor) => {
+                                // You can store the "editor" and use when it is needed.
+                                console.log("Editor is ready to use!", editor);
+                            }}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                console.log({ event, editor, data });
+                            }}
+                            onBlur={(event, editor) => {
+                                console.log("Blur.", editor);
+                            }}
+                            onFocus={(event, editor) => {
+                                console.log("Focus.", editor);
+                            }}
                         />
                     </div>
                 </form>
