@@ -23,6 +23,7 @@ import { number } from "yup/lib/locale";
 import PageLoading from "../../components/PageLoading";
 import Button from "../../components/Button";
 import { data } from "autoprefixer";
+import formatToCurreny from "../../utils/formatToCurreny";
 
 export default function ProjectDetail({ project }) {
     const { pageLoading, setPageLoading } = useContext(AppContext);
@@ -84,13 +85,12 @@ export default function ProjectDetail({ project }) {
             <Container className={"grid md:grid-cols-5 gap-8"}>
                 <div className='col-span-3 h-fit'>
                     <div>
-                        {/* <div className='relative border shadow-md aspect-square hidden md:block'>
-                            <Image src={project.picture_url} layout='fill' />
-                        </div> */}
                         <ProjectItem data={project} />
-                        <div className='p-4 bg-white border w-full shadow-md'>
-                            <p>{project.description}</p>
-                        </div>
+                        <div
+                            className='p-4 bg-white border prose w-full shadow-md'
+                            dangerouslySetInnerHTML={{
+                                __html: project.description,
+                            }}></div>
                     </div>
                     <Tab.Group
                         defaultIndex={2}
@@ -148,20 +148,19 @@ export default function ProjectDetail({ project }) {
                                                     ? "bg-secondary-500 text-white"
                                                     : "bg-gray-100"
                                             )}>
-                                            Rp {item}
+                                            {formatToCurreny(item)}
                                         </button>
                                     )}
                                 </RadioGroup.Option>
                             ))}
                         </RadioGroup>
                         <label className='relative block mt-4'>
-                            <span className='sr-only'>Search</span>
                             <span className='absolute inset-y-0 text-sm left-0 flex items-center pl-3 text-gray-700'>
                                 Rp
                             </span>
                             <input
                                 name='amount'
-                                type='text'
+                                type='number'
                                 value={formik.values.amount}
                                 onChange={formik.handleChange}
                                 className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-gray-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-secondary-300 focus:ring-secondary-200 focus:ring sm:text-sm text-sm focus:ring-opacity-50'
@@ -202,10 +201,10 @@ export default function ProjectDetail({ project }) {
                         <div className='flex justify-between items-center'>
                             <div>
                                 <p className='text-xs text-gray-400 leading-none'>
-                                    Terkumpul (45%)
+                                    Terkumpul {project.amount_collected_percent}
                                 </p>
                                 <p className='text-sm text-emerald-500'>
-                                    Rp 4.500.000
+                                    {formatToCurreny(project.amount_collected)}
                                 </p>
                             </div>
                             <div>
@@ -213,18 +212,19 @@ export default function ProjectDetail({ project }) {
                                     Target
                                 </p>
                                 <p className='text-sm text-primary-600'>
-                                    Rp 10.000.000
+                                    {formatToCurreny(project.target_amount)}
                                 </p>
                             </div>
                         </div>
                         <div className='h-1 rounded-full bg-gray-200 mt-1'>
-                            <div className='h-1 rounded-full bg-emerald-500 w-[45%]'></div>
+                            <div
+                                className={`h-1 rounded-full bg-emerald-500 ${project.amount_collected_percent_tw}`}></div>
                         </div>
                         <div className='flex justify-between items-center mt-2'>
                             <div className='flex items-center space-x-1'>
                                 <HiOutlineUserGroup className='text-gray-400' />
                                 <p className='text-xs text-gray-400'>
-                                    64 Pewakaf
+                                    {project.backers_count} pewakaf
                                 </p>
                             </div>
                             <div className='flex items-center space-x-1'>
@@ -255,20 +255,19 @@ export default function ProjectDetail({ project }) {
                                                         ? "bg-secondary-500 text-white"
                                                         : "bg-gray-100"
                                                 )}>
-                                                Rp {item}
+                                                {formatToCurreny(item)}
                                             </button>
                                         )}
                                     </RadioGroup.Option>
                                 ))}
                             </RadioGroup>
                             <label className='relative block mt-4'>
-                                <span className='sr-only'>Search</span>
                                 <span className='absolute inset-y-0 text-sm left-0 flex items-center pl-3 text-gray-700'>
                                     Rp
                                 </span>
                                 <input
                                     name='amount'
-                                    type='text'
+                                    type='number'
                                     value={formik.values.amount}
                                     onChange={formik.handleChange}
                                     className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-gray-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-secondary-300 focus:ring-secondary-200 focus:ring sm:text-sm text-sm focus:ring-opacity-50'

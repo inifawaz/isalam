@@ -1,17 +1,22 @@
+import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import React, { useState } from "react";
 import AdminNav from "../../../components/AdminNav";
 import Container from "../../../components/Container";
 import Input from "../../../components/Input";
 import Layout from "../../../components/Layout";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+import MyEditor from "../../../components/MyEditor";
+import { axios } from "../../../lib/axiosInstance";
 
 export default function CreateProject() {
+    const [editor, setEditor] = useState(null);
     const [fileDataURL, setFileDataURL] = useState(null);
+    const [featuredImage, setFeaturedImage] = useState(null);
     const [picture, setPicture] = useState(null);
     const formik = useFormik({
         initialValues: {
+            location: "",
             name: "",
             category_id: "",
             description: "",
@@ -28,7 +33,36 @@ export default function CreateProject() {
             third_choice_amount: 0,
             fourth_choice_amount: 0,
         },
+        onSubmit: (values) => {
+            handleSubmit(values);
+        },
     });
+
+    const handleSubmit = async (values) => {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(values)) {
+            formData.append(key, value);
+        }
+        formData.append("picture_url", featuredImage);
+        formData.append("description", editor);
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
+        await axios
+            .post("/projects", formData, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((response) => {
+                console.log(response);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
     return (
         <Layout>
             <AdminNav />
@@ -38,7 +72,7 @@ export default function CreateProject() {
                 </h2>
             </Container>
             <Container>
-                <form className=''>
+                <form onSubmit={formik.handleSubmit}>
                     <Input
                         label={"Nama Program Wakaf"}
                         name='name'
@@ -46,6 +80,16 @@ export default function CreateProject() {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         error={formik.touched.name && formik.errors.name}
+                    />
+                    <Input
+                        label={"Lokasi Program wakaf"}
+                        name='location'
+                        value={formik.values.location}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={
+                            formik.touched.location && formik.errors.location
+                        }
                     />
                     <div className='flex space-x-4 '>
                         <Input
@@ -169,13 +213,13 @@ export default function CreateProject() {
                     />
                     <Input
                         label={"Twitter Url"}
-                        name='facebook_url'
-                        value={formik.values.facebook_url}
+                        name='twitter_url'
+                        value={formik.values.twitter_url}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         error={
-                            formik.touched.facebook_url &&
-                            formik.errors.facebook_url
+                            formik.touched.twitter_url &&
+                            formik.errors.twitter_url
                         }
                     />
 
@@ -187,7 +231,9 @@ export default function CreateProject() {
                         onChange={(e) => {
                             let pic = URL.createObjectURL(e.target.files[0]);
                             setPicture(pic);
+                            setFeaturedImage(e.target.files[0]);
                         }}
+                        name='featured_image'
                     />
                     <div className='w-80 h-80'>
                         <img
@@ -200,9 +246,9 @@ export default function CreateProject() {
                             alt=''
                         />
                     </div>
-                    <div className='mt-8 min-h-screen'>
-                        <p>Deskripsi Program Wakaf</p>
-                        <CKEditor
+                    <p>Deskripsi Program Wakaf</p>
+                    <div className='mt-8  prose '>
+                        {/* <CKEditor
                             editor={ClassicEditor}
                             data=''
                             onReady={(editor) => {
@@ -219,8 +265,15 @@ export default function CreateProject() {
                             onFocus={(event, editor) => {
                                 console.log("Focus.", editor);
                             }}
+                        /> */}
+                        <MyEditor
+                            handleChange={(data) => {
+                                setEditor(data);
+                            }}
+                            data={editor}
                         />
                     </div>
+                    <button type='submit'>Simpan Project</button>
                 </form>
             </Container>
         </Layout>

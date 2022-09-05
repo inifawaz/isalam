@@ -9,9 +9,13 @@ import {
 } from "react-icons/hi";
 import { BiTimer } from "react-icons/bi";
 import AppContext from "../context/AppContext";
+import formatToCurreny from "../utils/formatToCurreny";
 
 export default function ProjectItem({ data }) {
     const { setPageLoading } = useContext(AppContext);
+    const classNames = (...classes) => {
+        return classes.filter(Boolean).join(" ");
+    };
     return (
         <Link href={`/projects/${data.id}`}>
             <div
@@ -39,16 +43,16 @@ export default function ProjectItem({ data }) {
                             </p>
                         </div>
                     </div>
-                    <h1 className='text-primary-600 my-1 text-lg font-medium '>
+                    <h1 className='text-primary-600 my-1 text-lg font-medium line-clamp-2'>
                         {data.name}
                     </h1>
                     <div className='flex justify-between items-center'>
                         <div>
                             <p className='text-xs text-gray-400 leading-none'>
-                                Terkumpul ({data.amount_collected_percent}%)
+                                Terkumpul ({data.amount_collected_percent})
                             </p>
                             <p className='text-sm text-emerald-500'>
-                                Rp {data.amount_collected}
+                                {formatToCurreny(data.amount_collected)}
                             </p>
                         </div>
                         <div>
@@ -56,12 +60,16 @@ export default function ProjectItem({ data }) {
                                 Target
                             </p>
                             <p className='text-sm text-primary-600'>
-                                Rp {data.target_amount}
+                                {formatToCurreny(data.target_amount)}
                             </p>
                         </div>
                     </div>
                     <div className='h-1 rounded-full bg-gray-200 mt-1'>
-                        <div className='h-1 rounded-full bg-emerald-500 w-[45%]'></div>
+                        <div
+                            className={classNames(
+                                "h-1 rounded-full bg-emerald-500 ",
+                                data.amount_collected_percent_tw
+                            )}></div>
                     </div>
                     <div className='flex justify-between items-center mt-2'>
                         <div className='flex items-center space-x-1'>

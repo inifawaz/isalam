@@ -1,5 +1,6 @@
 import React from "react";
 import { HiUserCircle } from "react-icons/hi";
+import formatToCurreny from "../utils/formatToCurreny";
 
 export default function PewakafItem({ data }) {
     return (
@@ -11,7 +12,7 @@ export default function PewakafItem({ data }) {
                 <p className='text-sm leading-none'>{data.name}</p>
                 <div className='flex items-center space-x-2'>
                     <p className='text-secondary-500 text-sm'>
-                        Rp {data.project_amount_given}
+                        {formatToCurreny(data.project_amount_given)}
                     </p>
 
                     <div className='h-1 w-1 rounded-full bg-gray-400 '></div>

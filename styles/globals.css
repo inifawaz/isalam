@@ -10,13 +10,7 @@
     input {
         @apply text-gray-600 tracking-wider
     }
-    h2 {
-        @apply text-2xl
-    }
 
-    ul {
-        @apply list-decimal list-inside
-    }
 
 }
 

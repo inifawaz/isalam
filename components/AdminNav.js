@@ -30,7 +30,7 @@ export default function AdminNav() {
 
     const a = router.pathname.split("/");
     const pathname = [a[0], a[1], a[2]].join("/");
-    console.log(pathname);
+
     return (
         <div className=''>
             <Container>

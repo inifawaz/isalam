@@ -12,41 +12,39 @@ import { useRouter } from "next/router";
 
 export default function setting() {
     const router = useRouter();
-    const { bio, setBio } = useContext(AppContext);
+    const { user, setUser } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            full_name: bio.full_name,
-            first_name: bio.first_name,
-            last_name: bio.last_name,
-            address: bio.address,
-            village: bio.village,
-            district: bio.district,
-            city: bio.city,
-            province: bio.province,
-            zip_code: bio.zip_code,
-            avatar_url: bio.avatar_url,
-            email: bio.email,
-            phone_number: bio.phone_number,
+            full_name: user.full_name,
+            address: user.address,
+            village: user.village,
+            district: user.district,
+            city: user.city,
+            province: user.province,
+            zip_code: user.zip_code,
+            avatar_url: user.avatar_url,
+            email: user.email,
+            phone_number: user.phone_number,
         },
         onSubmit: (values) => {
-            handleUpdateBio(values);
+            handleUpdateuser(values);
         },
     });
 
-    const handleUpdateBio = async (values) => {
+    const handleUpdateuser = async (values) => {
         console.log(values);
         setIsLoading(true);
         await axios
-            .put(`/bios/${bio.user_id}`, values, {
+            .put(`/me`, values, {
                 headers: { Authorization: `Bearer ${getCookie("token")}` },
             })
             .then((response) => {
                 console.log(response);
-                setCookie("bio", response.data.bio);
-                setBio(response.data.bio);
-                router.push("/");
+                setCookie("user", response.data.user);
+                setUser(response.data.user);
+                // router.push("/");
             })
             .catch((error) => {
                 console.log(error.response);
@@ -68,17 +66,22 @@ export default function setting() {
                     </h1>
                     <form onSubmit={formik.handleSubmit}>
                         <Input
-                            label='Nama Depan'
-                            value={formik.values.first_name}
+                            label='Nama Lengkap'
+                            value={formik.values.full_name}
                             onChange={formik.handleChange}
-                            name={"first_name"}
+                            name={"full_name"}
                         />
                         <Input
-                            disabled={true}
-                            label='Nama Belakang'
-                            value={formik.values.last_name}
+                            label='Nomer Telepon'
+                            value={formik.values.phone_number}
                             onChange={formik.handleChange}
-                            name={"last_name"}
+                            name={"phone_number"}
+                        />
+                        <Input
+                            label='Email'
+                            value={formik.values.email}
+                            onChange={formik.handleChange}
+                            name={"email"}
                         />
                         <Input
                             label='Alamat'
@@ -116,18 +119,7 @@ export default function setting() {
                             onChange={formik.handleChange}
                             name={"zip_code"}
                         />
-                        <Input
-                            label='Nomer Telepon'
-                            value={formik.values.phone_number}
-                            onChange={formik.handleChange}
-                            name={"phone_number"}
-                        />
-                        <Input
-                            label='Email'
-                            value={formik.values.email}
-                            onChange={formik.handleChange}
-                            name={"email"}
-                        />
+
                         <Button loading={isLoading}>Simpan Perubahan</Button>
                     </form>
                 </div>
