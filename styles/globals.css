@@ -14,4 +14,9 @@
 
 }
 
+.ck.ck-editor__main .ck-content {
+    min-height: 300px;
+    min-width: auto;
+}
+
 

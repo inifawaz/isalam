@@ -6,7 +6,7 @@ import isalamLight from "../public/isalam-light.png";
 
 export default function Footer() {
     return (
-        <div className='bg-slate-800  '>
+        <div className='bg-slate-800 mt-20 '>
             <Container
                 className={
                     "flex flex-col space-y-8 pb-20 pt-10 md:flex-row md:space-y-0 md:space-x-8"

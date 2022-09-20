@@ -16,9 +16,7 @@ export const AppProvider = ({ children }) => {
                     Authorization: `Bearer ${getCookie("token")}`,
                 },
             })
-            .then((response) => {
-                console.log(response);
-            })
+            .then((response) => {})
             .catch((error) => {
                 if (error.response.status === 401) {
                     deleteCookie("token");

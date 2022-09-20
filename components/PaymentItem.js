@@ -1,56 +1,56 @@
-import { getCookie } from "cookies-next";
-import React, { useContext, useEffect, useState } from "react";
-import AppContext from "../context/AppContext";
-import { axios } from "../lib/axiosInstance";
-import PageLoading from "./PageLoading";
+import Link from "next/link";
+import formatToCurreny from "../utils/formatToCurreny";
 
-export default function PaymentItem({ data }) {
-    const { setPageLoading, pageLoading } = useContext(AppContext);
-    const classNames = (...classes) => {
-        return classes.filter(Boolean).join(" ");
-    };
-    const formatDate = (data) => {
-        const a = new Date(data);
-        const date = a.getDate();
-        const month = a.getMonth();
-        const year = a.getFullYear();
-        const hour = a.getHours() < 10 ? `0${a.getHours()}` : a.getHours();
-        const minute =
-            a.getMinutes() < 10 ? `0${a.getMinutes()}` : a.getMinutes();
-
-        return `${date}/${month}/${year} ${hour}:${minute}`;
-    };
-
+export default function Paymentdata({ data }) {
     return (
-        <>
-            <div className='p-4 shadow-md border flex flex-col justify-between '>
+        <div className='p-6 bg-white shadow-md border '>
+            <time className='text-sm text-gray-400'>{data.created_at}</time>
+
+            <Link href={`/projects/${data.project_id}`}>
+                <h2 className='text-primary-600 mb-2 cursor-pointer text-xl'>
+                    {data.name}
+                </h2>
+            </Link>
+            <div className='flex space-x-8'>
                 <div>
-                    {data.status.statusCode === "01" && (
-                        <div className='bg-primary-100 text-primary-600 mb-2 tracking-wider py-1 px-2 inline-block text-xs'>
-                            belum dibayar
-                        </div>
-                    )}
-                    {data.status.statusCode === "02" && (
-                        <div className='bg-warning-100 text-warning-600 mb-2 tracking-wider py-1 px-2 inline-block text-xs'>
-                            waktu pembayaran telah habis
-                        </div>
-                    )}
-                    <h1 className='text-primary-600'>{data.project_name}</h1>
-                    <div className='flex space-x-4'>
-                        <small>{formatDate(data.created_at)}</small>
-                        <small>Rp {parseInt(data.amount)}</small>
-                    </div>
+                    <p className='text-sm text-gray-400'>Tagihan</p>
+                    <p className='text-secondary-500 font-semibold'>
+                        {formatToCurreny(data.total_amount)}
+                    </p>
                 </div>
-                {data.status.statusCode == "01" && (
-                    <button
-                        onClick={() => {
-                            window.open(data.payment_url, "_blank");
-                        }}
-                        className='text-xs py-1.5 px-3 mt-2 rounded-md bg-secondary-500 text-white'>
-                        Bayar Sekarang
-                    </button>
+                {data.status.statusCode === "01" && (
+                    <div>
+                        <p className='text-sm text-gray-400'>Status</p>
+                        <p className=' text-warning-500 font-semibold'>
+                            Menunggu Pembayaran
+                        </p>
+                    </div>
+                )}
+                {data.status.statusCode === "02" && (
+                    <div>
+                        <p className='text-sm text-gray-400'>Status</p>
+                        <p className=' text-gray-400 font-semibold'>
+                            Pembayaran Gagal
+                        </p>
+                    </div>
+                )}
+                {data.status.statusCode === "00" && (
+                    <div>
+                        <p className='text-sm text-gray-400'>Status</p>
+                        <p className=' text-secondary-500 font-semibold'>
+                            Pembayaran Berhasil
+                        </p>
+                    </div>
                 )}
             </div>
-        </>
+
+            {data.status.statusCode === "01" && (
+                <Link href={`/me/payments/${data.merchant_order_id}`}>
+                    <button className='py-2 tracking-wider mt-2 rounded-md w-full block text-center bg-secondary-500 text-white'>
+                        Bayar Sekarang
+                    </button>
+                </Link>
+            )}
+        </div>
     );
 }

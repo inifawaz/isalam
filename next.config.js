@@ -8,6 +8,9 @@ const nextConfig = {
             "api.isalamwakaf.com",
             "images.duitku.com",
             "127.0.0.1",
+            "images.unsplash.com",
+            "source.unsplash.com",
+            "via.placeholder.com",
         ],
     },
 };

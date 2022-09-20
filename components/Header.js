@@ -24,23 +24,15 @@ const navigations = [
         text: "Artikel",
     },
     {
-        href: "/about",
+        href: "/test",
         text: "Tentang Kami",
     },
 ];
 
 const navigationsAuth = [
     {
-        href: "/me/payments",
-        text: "Pembayaran",
-    },
-    {
-        href: "/",
-        text: "Program Wakaf",
-    },
-    {
-        href: "/me/setting",
-        text: "Atur Profile",
+        href: "/me/dashboard",
+        text: "Dashboard",
     },
 ];
 
@@ -53,9 +45,9 @@ export default function Header() {
     const router = useRouter();
     const handleLogout = async () => {
         await axios
-            .post(
+            .get(
                 "/logout",
-                {},
+
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -164,6 +156,28 @@ export default function Header() {
                                             )}
                                         </Menu.Item>
                                     ))}
+                                    {user.role === "admin" && (
+                                        <Menu.Item>
+                                            {({ active }) => (
+                                                <div>
+                                                    <Link
+                                                        href={
+                                                            "/admin/dashboard"
+                                                        }>
+                                                        <a
+                                                            className={classNames(
+                                                                "block p-2 rounded-md transition-all",
+                                                                active
+                                                                    ? "bg-gray-100"
+                                                                    : ""
+                                                            )}>
+                                                            Admin
+                                                        </a>
+                                                    </Link>
+                                                </div>
+                                            )}
+                                        </Menu.Item>
+                                    )}
                                     <Menu.Item>
                                         {({ active }) => (
                                             <button

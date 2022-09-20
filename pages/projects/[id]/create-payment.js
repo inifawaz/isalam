@@ -10,6 +10,8 @@ import { getCookie } from "cookies-next";
 import Image from "next/image";
 import Button from "../../../components/Button";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import formatToCurreny from "../../../utils/formatToCurreny";
 
 export default function Createtransaction({ project, paymentMethods, amount }) {
     const router = useRouter();
@@ -25,28 +27,14 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
         paymentImage: "",
         totalFee: "0",
     });
-    const formikCreateTransaction = useFormik({
-        enableReinitialize: true,
-        initialValues: {
-            full_name: user.full_name,
-            phone_number: user.phone_number,
-            email: user.email,
-            title: project.title,
-            amount: amount,
-        },
-    });
 
     const handleCreateTransation = async () => {
         setIsLoading(true);
         const project_id = project.id;
-        const project_amount_given = parseInt(
-            formikCreateTransaction.values.amount
-        );
 
         const paymentMethod = selectedPaymentMethod.paymentMethod;
-        const transaction_fee = 0;
         console.log(project_id);
-        console.log(project_amount_given);
+        console.log(amount);
         console.log(paymentMethod);
 
         await axios
@@ -54,7 +42,7 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                 "/payments",
                 {
                     project_id,
-                    project_amount_given,
+                    given_amount: amount,
                     paymentMethod,
                 },
                 {
@@ -67,11 +55,13 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                 setIsLoading(false);
                 console.log(response);
                 window.open(response.data.payment.payment_url, "_blank");
-                router.push("/");
+                router.push(
+                    `/me/payments/${response.data.payment.merchant_order_id}`
+                );
             })
             .catch((error) => {
                 setIsLoading(false);
-                console.log(error.response);
+                console.log(error);
             })
             .finally(() => {
                 setIsLoading(false);
@@ -135,16 +125,19 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                         </div>
                     </div>
                     <div className=' my-8 py-2 border-primary-500 border-y-2 border-dashed '>
+                        <div>
+                            <h2 className='text-gray-600 text-lg font-medium mb-1'>
+                                {project.name}
+                            </h2>
+                        </div>
                         <div className='flex justify-between'>
-                            <p className='text-sm'>Nominan wakaf</p>
-                            <p className='text-sm'>
-                                Rp {formikCreateTransaction.values.amount}
-                            </p>
+                            <p className='text-sm'>Nominal wakaf</p>
+                            <p className='text-sm'>{formatToCurreny(amount)}</p>
                         </div>
                         <div className='flex justify-between'>
                             <p className='text-sm'>Biaya pemeliharaan sistem</p>
                             <p className='text-sm'>
-                                Rp {project.maintenance_fee}
+                                {formatToCurreny(project.maintenance_fee)}
                             </p>
                         </div>
                         <div className='flex justify-between'>
@@ -153,20 +146,21 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                                 {selectedPaymentMethod.paymentName})
                             </p>
                             <p className='text-sm'>
-                                Rp {selectedPaymentMethod.totalFee}
+                                {formatToCurreny(
+                                    selectedPaymentMethod.totalFee
+                                )}
                             </p>
                         </div>
-                        <div className='flex justify-between '>
+                        <div className='flex justify-between mt-1'>
                             <p className=' font-semibold text-secondary-500'>
                                 Total Pembayaran
                             </p>
                             <p className=' font-semibold text-secondary-500'>
-                                Rp{" "}
-                                {parseInt(selectedPaymentMethod.totalFee) +
-                                    parseInt(
-                                        formikCreateTransaction.values.amount
-                                    ) +
-                                    parseInt(project.maintenance_fee)}
+                                {formatToCurreny(
+                                    parseInt(selectedPaymentMethod.totalFee) +
+                                        parseInt(amount) +
+                                        parseInt(project.maintenance_fee)
+                                )}
                             </p>
                         </div>
                     </div>
@@ -175,13 +169,17 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                         color={"secondary"}
                         loading={isLoading}
                         disabled={
-                            formikCreateTransaction.values.amount === "0" ||
-                            selectedPaymentMethod.totalFee === "0"
+                            amount == 0 || selectedPaymentMethod.totalFee == 0
                                 ? true
                                 : false
                         }>
                         Lakukan Pembayaran
                     </Button>
+                    <div className='text-center mt-4'>
+                        <Link href={`/projects/${project.id}`}>
+                            <a className=''>Batal</a>
+                        </Link>
+                    </div>
                 </div>
             </Container>
         </Layout>
@@ -198,9 +196,10 @@ export async function getServerSideProps({ req, res, query }) {
     let paymentMethods = [];
     await axios
         .post(
-            "/getpaymentmethod",
+            "/getpaymentmethods",
             {
                 amount,
+                project_id: id,
             },
             {
                 headers: {

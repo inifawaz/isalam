@@ -10,6 +10,7 @@ import Layout from "../components/Layout";
 import Container from "../components/Container";
 import Input from "../components/Input";
 import AppContext from "../context/AppContext";
+import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils";
 
 export default function Login() {
     const { setUser, setToken } = useContext(AppContext);
@@ -45,7 +46,7 @@ export default function Login() {
                 setUser(JSON.parse(getCookie("user")));
                 setToken(getCookie("token"));
                 if (user.role == "admin") {
-                    router.push("/admin");
+                    router.push("/admin/dashboard");
                 } else {
                     router.push("/");
                 }

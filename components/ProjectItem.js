@@ -11,19 +11,20 @@ import { BiTimer } from "react-icons/bi";
 import AppContext from "../context/AppContext";
 import formatToCurreny from "../utils/formatToCurreny";
 
-export default function ProjectItem({ data }) {
+export default function ProjectItem({ data, href }) {
     const { setPageLoading } = useContext(AppContext);
     const classNames = (...classes) => {
         return classes.filter(Boolean).join(" ");
     };
+
     return (
-        <Link href={`/projects/${data.id}`}>
+        <Link href={`${href}`}>
             <div
                 onClick={() => setPageLoading(true)}
-                className=' h-fit cursor-pointer'>
+                className=' h-fit cursor-pointer hover:scale-[1.02] transition-all'>
                 <div className='relative shadow-md aspect-square'>
                     <Image
-                        src={data.picture_url}
+                        src={data.featured_image_url}
                         layout='fill'
                         alt='project image'
                     />
@@ -49,41 +50,63 @@ export default function ProjectItem({ data }) {
                     <div className='flex justify-between items-center'>
                         <div>
                             <p className='text-xs text-gray-400 leading-none'>
-                                Terkumpul ({data.amount_collected_percent})
+                                Terkumpul{" "}
+                                {data.is_target === 1 ? (
+                                    <span>
+                                        {data.percent_collected_amount}%
+                                    </span>
+                                ) : null}
                             </p>
                             <p className='text-sm text-emerald-500'>
-                                {formatToCurreny(data.amount_collected)}
+                                {formatToCurreny(data.collected_amount)}
                             </p>
                         </div>
-                        <div>
-                            <p className='text-xs text-gray-400 leading-none text-right'>
-                                Target
-                            </p>
-                            <p className='text-sm text-primary-600'>
-                                {formatToCurreny(data.target_amount)}
-                            </p>
-                        </div>
+                        {data.is_target === 1 ? (
+                            <div>
+                                <p className='text-xs text-gray-400 leading-none text-right'>
+                                    Target
+                                </p>
+                                <p className='text-sm text-primary-600'>
+                                    {formatToCurreny(data.target_amount)}
+                                </p>
+                            </div>
+                        ) : null}
                     </div>
-                    <div className='h-1 rounded-full bg-gray-200 mt-1'>
-                        <div
-                            className={classNames(
-                                "h-1 rounded-full bg-emerald-500 ",
-                                data.amount_collected_percent_tw
-                            )}></div>
+                    <div
+                        className={`h-1 rounded-full ${
+                            data.is_target === 1 ? "bg-gray-200" : null
+                        } mt-1`}>
+                        {data.is_target === 1 ? (
+                            <div
+                                className='h-1 rounded-full bg-emerald-500'
+                                style={{
+                                    width: `${
+                                        data.percent_collected_amount > 100
+                                            ? "100%"
+                                            : data.percent_collected_amount +
+                                              "%"
+                                    }`,
+                                }}></div>
+                        ) : null}
                     </div>
                     <div className='flex justify-between items-center mt-2'>
                         <div className='flex items-center space-x-1'>
                             <HiOutlineUserGroup className='text-gray-400' />
                             <p className='text-xs text-gray-400'>
-                                {data.backers_count} Pewakaf
+                                {data.total_backers} Pewakaf
                             </p>
                         </div>
-                        <div className='flex items-center space-x-1'>
-                            <BiTimer size={"1.2em"} className='text-gray-400' />
-                            <p className='text-xs text-gray-400'>
-                                {data.days_left} hari lagi
-                            </p>
-                        </div>
+                        {data.is_limited_time === 1 ? (
+                            <div className='flex items-center space-x-1'>
+                                <BiTimer
+                                    size={"1.2em"}
+                                    className='text-gray-400'
+                                />
+                                <p className='text-xs text-gray-400'>
+                                    {data.days_left} hari lagi
+                                </p>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </div>

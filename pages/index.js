@@ -18,7 +18,11 @@ export default function Index({ projects }) {
             {pageLoading && <PageLoading />}
             <Container className={"grid md:grid-cols-3 min-h-screen gap-8"}>
                 {projects.map((item, index) => (
-                    <ProjectItem key={index} data={item} />
+                    <ProjectItem
+                        href={`/projects/${item.id}`}
+                        key={index}
+                        data={item}
+                    />
                 ))}
             </Container>
         </Layout>

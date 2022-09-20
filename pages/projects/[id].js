@@ -25,13 +25,20 @@ import Button from "../../components/Button";
 import { data } from "autoprefixer";
 import formatToCurreny from "../../utils/formatToCurreny";
 
-export default function ProjectDetail({ project }) {
+export default function ProjectDetail({
+    project,
+    information,
+    backers,
+    reports,
+}) {
     const { pageLoading, setPageLoading } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
     const elamount = useRef(null);
     const { bio, token } = useContext(AppContext);
 
     const [choiceAmount, setChoiceAmount] = useState("");
+    const selisih = project.target_amount - project.collected_amount;
+    console.log(selisih);
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -40,6 +47,10 @@ export default function ProjectDetail({ project }) {
         validationSchema: yup.object({
             amount: yup
                 .number("harap isi dengan angka")
+                // .max(
+                //     selisih,
+                //     `tidak boleh melebihi ${formatToCurreny(selisih)}`
+                // )
                 .required("silahkan isi nominal wakaf anda"),
         }),
     });
@@ -49,15 +60,20 @@ export default function ProjectDetail({ project }) {
     }
     const [tabs, setTabs] = useState([
         {
-            text: "Pewakaf",
-            count: 0,
+            name: "Pewakaf",
+            total: backers.length,
         },
         {
-            text: "Informasi Terbaru",
-            count: 0,
+            name: "Informasi Terbaru",
+            total: information.length,
+        },
+        {
+            name: "Laporan Terbaru",
+            total: reports.length,
         },
     ]);
     const handleBtnWakafSekarang = () => {
+        if (formik.errors.amount) return;
         if (formik.values.amount) setIsLoading(true);
 
         if (formik.values.amount === "") {
@@ -93,7 +109,6 @@ export default function ProjectDetail({ project }) {
                             }}></div>
                     </div>
                     <Tab.Group
-                        defaultIndex={2}
                         className='  bg-white shadow-md border'
                         as={"div"}>
                         <Tab.List
@@ -111,19 +126,31 @@ export default function ProjectDetail({ project }) {
                                                 : "text-gray-400"
                                         )
                                     }>
-                                    {item.text}
+                                    {item.name}
+                                    {item.total > 0 ? (
+                                        <span className='text-xs bg-warning-500 px-2 ml-4 py-1 text-white rounded-sm'>
+                                            {item.total}
+                                        </span>
+                                    ) : null}
                                 </Tab>
                             ))}
                         </Tab.List>
                         <Tab.Panels className={"md:p-6 p-4"}>
                             <Tab.Panel className={"flex flex-col divide-y-2"}>
-                                {project.backers.map((item, index) => (
+                                {backers.map((item, index) => (
                                     <PewakafItem data={item} />
                                 ))}
                             </Tab.Panel>
                             <Tab.Panel>
                                 <ol className='border-l relative  border-gray-300'>
-                                    {project.updates.map((item, index) => (
+                                    {information.map((item, index) => (
+                                        <UpdateItem data={item} />
+                                    ))}
+                                </ol>
+                            </Tab.Panel>
+                            <Tab.Panel>
+                                <ol className='border-l relative  border-gray-300'>
+                                    {reports.map((item, index) => (
                                         <UpdateItem data={item} />
                                     ))}
                                 </ol>
@@ -138,7 +165,7 @@ export default function ProjectDetail({ project }) {
                             className={"flex flex-wrap"}
                             value={formik.values.amount}
                             onChange={setChoiceAmount}>
-                            {project.choice_amount.map((item, index) => (
+                            {project.choice_given_amount.map((item, index) => (
                                 <RadioGroup.Option key={index} value={item}>
                                     {({ checked }) => (
                                         <button
@@ -166,6 +193,11 @@ export default function ProjectDetail({ project }) {
                                 className='placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-gray-300 rounded-md py-2 pl-9 pr-3 shadow-sm focus:outline-none focus:border-secondary-300 focus:ring-secondary-200 focus:ring sm:text-sm text-sm focus:ring-opacity-50'
                                 placeholder='atau masukkan nominal wakaf disini'
                             />
+                            {formik.errors.amount && (
+                                <small className='absolute text-warning-500'>
+                                    {formik.errors.amount}
+                                </small>
+                            )}
                         </label>
                     </div>
                     <div className='  md:static sticky bottom-0 z-10    py-4 md:py-6'>
@@ -196,46 +228,69 @@ export default function ProjectDetail({ project }) {
                             </div>
                         </div>
                         <h1 className='text-primary-600 my-1 text-lg font-medium'>
-                            {project.title}
+                            {project.name}
                         </h1>
                         <div className='flex justify-between items-center'>
                             <div>
                                 <p className='text-xs text-gray-400 leading-none'>
-                                    Terkumpul {project.amount_collected_percent}
+                                    Terkumpul{" "}
+                                    {project.is_target === 1 ? (
+                                        <span>
+                                            ({project.percent_collected_amount})
+                                        </span>
+                                    ) : null}
                                 </p>
                                 <p className='text-sm text-emerald-500'>
-                                    {formatToCurreny(project.amount_collected)}
+                                    {formatToCurreny(project.collected_amount)}
                                 </p>
                             </div>
-                            <div>
-                                <p className='text-xs text-gray-400 leading-none text-right'>
-                                    Target
-                                </p>
-                                <p className='text-sm text-primary-600'>
-                                    {formatToCurreny(project.target_amount)}
-                                </p>
-                            </div>
+                            {project.is_target === 1 ? (
+                                <div>
+                                    <p className='text-xs text-gray-400 leading-none text-right'>
+                                        Target
+                                    </p>
+                                    <p className='text-sm text-primary-600'>
+                                        {formatToCurreny(project.target_amount)}
+                                    </p>
+                                </div>
+                            ) : null}
                         </div>
-                        <div className='h-1 rounded-full bg-gray-200 mt-1'>
-                            <div
-                                className={`h-1 rounded-full bg-emerald-500 ${project.amount_collected_percent_tw}`}></div>
+                        <div
+                            className={`h-1 rounded-full ${
+                                project.is_target === 1 ? "bg-gray-200" : null
+                            } mt-1`}>
+                            {project.is_target === 1 ? (
+                                <div
+                                    className='h-1 rounded-full bg-emerald-500'
+                                    style={{
+                                        width: `${
+                                            project.percent_collected_amount >
+                                            100
+                                                ? "100%"
+                                                : project.percent_collected_amount +
+                                                  "%"
+                                        }`,
+                                    }}></div>
+                            ) : null}
                         </div>
                         <div className='flex justify-between items-center mt-2'>
                             <div className='flex items-center space-x-1'>
                                 <HiOutlineUserGroup className='text-gray-400' />
                                 <p className='text-xs text-gray-400'>
-                                    {project.backers_count} pewakaf
+                                    {data.total_backers} Pewakaf
                                 </p>
                             </div>
-                            <div className='flex items-center space-x-1'>
-                                <BiTimer
-                                    size={"1.2em"}
-                                    className='text-gray-400'
-                                />
-                                <p className='text-xs text-gray-400'>
-                                    {project.days_left} hari lagi
-                                </p>
-                            </div>
+                            {data.is_limited_time === 1 ? (
+                                <div className='flex items-center space-x-1'>
+                                    <BiTimer
+                                        size={"1.2em"}
+                                        className='text-gray-400'
+                                    />
+                                    <p className='text-xs text-gray-400'>
+                                        {data.days_left} hari lagi
+                                    </p>
+                                </div>
+                            ) : null}
                         </div>
                         <div className='mt-4'>
                             <p className='text-gray-500 tracking-wider '>
@@ -245,21 +300,25 @@ export default function ProjectDetail({ project }) {
                                 className={"flex flex-wrap"}
                                 value={formik.values.amount}
                                 onChange={setChoiceAmount}>
-                                {project.choice_amount.map((item, index) => (
-                                    <RadioGroup.Option key={index} value={item}>
-                                        {({ checked }) => (
-                                            <button
-                                                className={classNames(
-                                                    "text-xs py-1 px-3 mr-2 mt-2  ring-1 ring-gray-300",
-                                                    checked
-                                                        ? "bg-secondary-500 text-white"
-                                                        : "bg-gray-100"
-                                                )}>
-                                                {formatToCurreny(item)}
-                                            </button>
-                                        )}
-                                    </RadioGroup.Option>
-                                ))}
+                                {project.choice_given_amount.map(
+                                    (item, index) => (
+                                        <RadioGroup.Option
+                                            key={index}
+                                            value={item}>
+                                            {({ checked }) => (
+                                                <button
+                                                    className={classNames(
+                                                        "text-xs py-1 px-3 mr-2 mt-2  ring-1 ring-gray-300",
+                                                        checked
+                                                            ? "bg-secondary-500 text-white"
+                                                            : "bg-gray-100"
+                                                    )}>
+                                                    {formatToCurreny(item)}
+                                                </button>
+                                            )}
+                                        </RadioGroup.Option>
+                                    )
+                                )}
                             </RadioGroup>
                             <label className='relative block mt-4'>
                                 <span className='absolute inset-y-0 text-sm left-0 flex items-center pl-3 text-gray-700'>
@@ -298,15 +357,23 @@ export default function ProjectDetail({ project }) {
 
 export async function getServerSideProps(ctx) {
     let project = [];
+    let information = [];
+    let reports = [];
+    let backers = [];
     const { id } = ctx.query;
     await axios.get(`/projects/${id}`).then((response) => {
-        console.log(response.data.project);
         project = response.data.project;
+        information = response.data.information;
+        reports = response.data.reports;
+        backers = response.data.backers;
     });
 
     return {
         props: {
             project,
+            information,
+            reports,
+            backers,
         },
     };
 }
