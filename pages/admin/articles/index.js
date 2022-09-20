@@ -12,15 +12,23 @@ import { axios } from "../../../lib/axiosInstance";
 export default function index({ articles }) {
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const tabs = [{ name: "Semua" }, { name: "Disembunyikan" }];
-    console.log(articles);
     return (
         <Layout>
             <Container className={"flex space-x-8"}>
                 <AdminNav />
                 <div className='w-full'>
-                    <h1 className='text-2xl font-semibold tracking-wider text-gray-500 mb-2'>
-                        Artikel
-                    </h1>
+                    <div>
+                        <div className='flex items-center justify-between'>
+                            <h1 className='text-2xl font-semibold tracking-wider text-gray-500 mb-2'>
+                                Artikel
+                            </h1>
+                            <Link href='/admin/articles/create'>
+                                <a className='py-2 px-3 text-sm bg-primary-500 text-white rounded-md inline-block'>
+                                    Buat Baru
+                                </a>
+                            </Link>
+                        </div>
+                    </div>
                     <Tab.Group>
                         <Tab.List className={"border-b mb-4 border-gray-300"}>
                             {tabs.map((item, index) => (
@@ -50,7 +58,7 @@ export default function index({ articles }) {
                                                 alt='project image'
                                             />
                                         </div>
-                                        <div className='p-4 bg-white border shadow-md'>
+                                        <div className='p-4 bg-white border grow shadow-md'>
                                             <div className='flex space-x-4 justify-between items-center'>
                                                 <div className='flex items-center  space-x-1'>
                                                     <HiOutlineTag className='text-gray-400' />
@@ -68,9 +76,6 @@ export default function index({ articles }) {
                                                     __html: item.content,
                                                 }}></div>
                                             <div className='flex space-x-4 mt-4'>
-                                                <button className='inline-block py-1 px-2 rounded text-sm bg-warning-100  text-warning-600'>
-                                                    Hapus
-                                                </button>
                                                 <Link
                                                     href={`/admin/articles/${item.id}`}>
                                                     <a className='inline-block py-1 px-2 rounded text-sm bg-primary-500 text-white'>
@@ -83,7 +88,7 @@ export default function index({ articles }) {
                                     // </Link>
                                 ))}
                             </Tab.Panel>
-                            <Tab.Panel>
+                            <Tab.Panel className={"flex flex-col space-y-4"}>
                                 {articles
                                     .filter((item) => item.is_shown === 0)
                                     .map((item, index) => (
