@@ -33,6 +33,7 @@ export default function ProjectDetails({
     const [isLimitedTime, setIsLimitedTime] = useState(false);
     const [isTarget, setIsTarget] = useState(false);
     const [isShown, setIsShown] = useState(false);
+    const [isFavourite, setIsFavourite] = useState(false);
     const [isEnded, setIsEnded] = useState(false);
     const [editor, setEditor] = useState(project.description);
     const [editorLoaded, setEditorLoaded] = useState(false);
@@ -57,6 +58,11 @@ export default function ProjectDetails({
             setIsEnded(true);
         } else if (project.is_ended === 0) {
             setIsEnded(false);
+        }
+        if (project.is_favourite === 1) {
+            setIsFavourite(true);
+        } else if (project.is_favourite === 0) {
+            setIsFavourite(false);
         }
     }, []);
 
@@ -110,6 +116,7 @@ export default function ProjectDetails({
         formData.append("is_ended", isEnded ? 1 : 0);
         formData.append("is_target", isTarget ? 1 : 0);
         formData.append("is_limited_time", isLimitedTime ? 1 : 0);
+        formData.append("is_favourite", isFavourite ? 1 : 0);
         formData.append("_method", "PUT");
         for (const [key, value] of formData.entries()) {
             console.log(`${key}: ${value}`);
@@ -862,6 +869,27 @@ export default function ProjectDetails({
                                          peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                             <p className='ml-3 text-sm '>
                                                 Tampilkan Program Wakaf
+                                            </p>
+                                        </label>
+                                    </div>
+                                    <div className='rounded-md mb-4 border-gray-300 p-4 border'>
+                                        <label
+                                            htmlFor='small-toggle-favourite'
+                                            className='inline-flex relative items-center mb-1 cursor-pointer'>
+                                            <input
+                                                type='checkbox'
+                                                className='sr-only peer'
+                                                id='small-toggle-favourite'
+                                                checked={isFavourite}
+                                                onChange={() =>
+                                                    setIsFavourite(!isFavourite)
+                                                }
+                                            />
+                                            <div
+                                                className="w-9 h-5 bg-gray-200 peer-focus:outline-none
+                                         peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                            <p className='ml-3 text-sm '>
+                                                Jadikan Sebagai Program Plihan
                                             </p>
                                         </label>
                                     </div>

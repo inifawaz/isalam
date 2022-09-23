@@ -24,7 +24,7 @@ const navigations = [
         text: "Artikel",
     },
     {
-        href: "/test",
+        href: "/about-us",
         text: "Tentang Kami",
     },
 ];
