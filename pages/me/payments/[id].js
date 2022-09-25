@@ -196,7 +196,11 @@ export default function PaymentDetails({ payment }) {
                                                                                         item,
                                                                                         index
                                                                                     ) => (
-                                                                                        <li className='text-sm ml-4 text-gray-500'>
+                                                                                        <li
+                                                                                            key={
+                                                                                                index
+                                                                                            }
+                                                                                            className='text-sm ml-4 text-gray-500'>
                                                                                             {
                                                                                                 item
                                                                                             }

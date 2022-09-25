@@ -75,6 +75,7 @@ export default function index({ projects, categories }) {
                             const categoriyName = item.name;
                             return (
                                 <Tab.Panel
+                                    key={index}
                                     className={"grid md:grid-cols-3 gap-8"}>
                                     {projects
                                         .filter(
