@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import Container from "./Container";
 import isalamDark from "../public/isalam-dark.png";
 import Link from "next/link";
-import { HiMenu } from "react-icons/hi";
+import { HiMenu, HiUserCircle } from "react-icons/hi";
 import { Menu } from "@headlessui/react";
 import { useRouter } from "next/router";
 import AppContext from "../context/AppContext";
@@ -88,13 +88,22 @@ export default function Header() {
                         <Menu.Button as='div' className={"cursor-pointer ml-8"}>
                             {user && token ? (
                                 <div className='flex items-center space-x-1'>
-                                    <div className='relative h-8 w-8 rounded-full overflow-hidden shadow-lg border'>
-                                        <Image
-                                            src={user.avatar_url}
-                                            layout='fill'
-                                            alt='avatar'
+                                    {user.avatar_url ? (
+                                        <div className='relative h-8 w-8 rounded-full overflow-hidden shadow-lg border'>
+                                            <Image
+                                                src={user.avatar_url}
+                                                layout='fill'
+                                                alt='avatar'
+                                                objectFit='contain'
+                                            />
+                                        </div>
+                                    ) : (
+                                        <HiUserCircle
+                                            size='2rem'
+                                            className='text-gray-400'
                                         />
-                                    </div>
+                                    )}
+
                                     <div className='hidden md:block'>
                                         <p className='text-sm leading-none'>
                                             {user.full_name}
@@ -156,7 +165,7 @@ export default function Header() {
                                             )}
                                         </Menu.Item>
                                     ))}
-                                    {user.role === "admin" && (
+                                    {user.role.includes("admin") && (
                                         <Menu.Item>
                                             {({ active }) => (
                                                 <div>

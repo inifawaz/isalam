@@ -25,10 +25,23 @@ export default function projects() {
     };
 
     const tabs = [
-        { name: "Semua" },
-        { name: "Berlangsung" },
-        { name: "Berakhir" },
-        { name: "Disembunyikan" },
+        { name: "Semua", total: projects.length },
+        {
+            name: "Berlangsung",
+            total: projects.filter(
+                (item) => item.is_ended === 0 && item.is_shown === 1
+            ).length,
+        },
+        {
+            name: "Berakhir",
+            total: projects.filter(
+                (item) => item.is_ended === 1 && item.is_shown === 1
+            ).length,
+        },
+        {
+            name: "Disembunyikan",
+            total: projects.filter((item) => item.is_shown === 0).length,
+        },
     ];
 
     useEffect(() => {
@@ -59,13 +72,14 @@ export default function projects() {
                                     key={index}
                                     className={({ selected }) =>
                                         classNames(
-                                            "  whitespace-nowrap outline-none text-sm  py-2 px-2  border-b-2     ",
+                                            "  whitespace-nowrap outline-none text-sm  py-2 px-4 space-x-4  border-b-2     ",
                                             selected
                                                 ? "border-primary-500  text-primary-500"
                                                 : "border-white text-gray-400"
                                         )
                                     }>
-                                    {item.name}
+                                    <span>{item.name}</span>
+                                    <span>{item.total}</span>
                                 </Tab>
                             ))}
                         </Tab.List>
@@ -81,7 +95,11 @@ export default function projects() {
                             </Tab.Panel>
                             <Tab.Panel className={"grid md:grid-cols-2 gap-8"}>
                                 {projects
-                                    .filter((item) => item.is_shown === 1)
+                                    .filter(
+                                        (item) =>
+                                            item.is_shown === 1 &&
+                                            item.is_ended === 0
+                                    )
                                     .map((item, index) => (
                                         <ProjectItem
                                             href={`/admin/projects/${item.id}`}
@@ -92,7 +110,11 @@ export default function projects() {
                             </Tab.Panel>
                             <Tab.Panel className={"grid md:grid-cols-2 gap-8"}>
                                 {projects
-                                    .filter((item) => item.is_ended === 1)
+                                    .filter(
+                                        (item) =>
+                                            item.is_ended === 1 &&
+                                            item.is_shown === 1
+                                    )
                                     .map((item, index) => (
                                         <ProjectItem
                                             href={`/admin/projects/${item.id}`}

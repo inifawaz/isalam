@@ -21,14 +21,25 @@ export default function ProjectItem({ data, href }) {
         <Link href={`${href}`}>
             <div
                 onClick={() => setPageLoading(true)}
-                className=' h-fit cursor-pointer hover:scale-[1.02] transition-all'>
-                <div className='relative shadow-md aspect-square'>
-                    <Image
-                        src={data.featured_image_url}
-                        layout='fill'
-                        alt='project image'
-                    />
-                </div>
+                className=' h-fit cursor-pointer  transition-all'>
+                {data.featured_image_url ? (
+                    <div className='relative shadow-md aspect-square'>
+                        {data.is_ended === 1 && (
+                            <div className='absolute inset-0 z-10 flex items-center justify-center bg-black/50'>
+                                <p className='text-white text-2xl'>selesai</p>
+                            </div>
+                        )}
+
+                        <Image
+                            src={data.featured_image_url}
+                            layout='fill'
+                            alt='project image'
+                        />
+                    </div>
+                ) : (
+                    <div className='relative bg-gray-800 shadow-md aspect-square'></div>
+                )}
+
                 <div className='p-4 bg-white border shadow-md'>
                     <div className='flex space-x-4 items-center'>
                         <div className='flex items-center space-x-1'>

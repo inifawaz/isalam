@@ -45,7 +45,7 @@ export default function Login() {
 
                 setUser(JSON.parse(getCookie("user")));
                 setToken(getCookie("token"));
-                if (user.role == "admin") {
+                if (user.role.includes("admin")) {
                     router.push("/admin/dashboard");
                 } else {
                     router.push("/");
@@ -72,6 +72,9 @@ export default function Login() {
                         </div>
                     )}
                     <div className='flex flex-col mb-4'>
+                        <h2 className='text-2xl mb-2 font-medium text-primary-600 text-center'>
+                            Masuk
+                        </h2>
                         <Input
                             label={"Email"}
                             type='email'
@@ -102,7 +105,9 @@ export default function Login() {
                     <div className='text-center mt-8'>
                         <small className='text-gray-500'>
                             belum punya akun?{" "}
-                            <span className='font-medium text-primary-500 cursor-pointer'>
+                            <span
+                                onClick={() => router.push("/register")}
+                                className='font-medium text-primary-500 cursor-pointer'>
                                 daftar sekarang
                             </span>
                         </small>

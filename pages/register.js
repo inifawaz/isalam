@@ -12,11 +12,13 @@ import Input from "../components/Input";
 import AppContext from "../context/AppContext";
 
 export default function Register() {
-    const { setBio, setToken } = useContext(AppContext);
+    const { setUser, setToken } = useContext(AppContext);
     const formikRegister = useFormik({
         initialValues: {
             email: "",
             password: "",
+            full_name: "",
+            phone_number: "",
         },
         validationSchema: yup.object({
             email: yup.string().required("email tidak boleh kosong"),
@@ -34,19 +36,20 @@ export default function Register() {
         setMessage("");
         setIsLoading(true);
         await axios
-            .post("/Register", values)
+            .post("/register", values)
             .then((response) => {
                 console.log(response);
                 const token = response.data.token;
-                const bio = response.data.user.bio;
+                const user = response.data.user;
                 setCookie("token", token);
-                setCookie("bio", bio);
-                setBio(bio);
+                setCookie("user", user);
+                setUser(user);
                 setToken(token);
                 router.push("/");
             })
             .catch((error) => {
-                setMessage(error.response.data.message);
+                console.log(error);
+                setMessage(error.response?.data?.message);
             })
             .finally(() => {
                 setIsLoading(false);
@@ -65,6 +68,31 @@ export default function Register() {
                         </div>
                     )}
                     <div className='flex flex-col mb-4'>
+                        <h2 className='text-2xl mb-2 font-medium text-primary-600 text-center'>
+                            Daftar
+                        </h2>
+                        <Input
+                            label={"Nama Lengkap"}
+                            name={"full_name"}
+                            value={formikRegister.values.full_name}
+                            onBlur={formikRegister.handleBlur}
+                            onChange={formikRegister.handleChange}
+                            error={
+                                formikRegister.touched.full_name &&
+                                formikRegister.errors.full_name
+                            }
+                        />
+                        <Input
+                            label={"Nomer Telepon"}
+                            name={"phone_number"}
+                            value={formikRegister.values.phone_number}
+                            onBlur={formikRegister.handleBlur}
+                            onChange={formikRegister.handleChange}
+                            error={
+                                formikRegister.touched.phone_number &&
+                                formikRegister.errors.phone_number
+                            }
+                        />
                         <Input
                             label={"Email"}
                             type='email'
@@ -95,7 +123,9 @@ export default function Register() {
                     <div className='text-center mt-8'>
                         <small className='text-gray-500'>
                             sudah punya akun?{" "}
-                            <span className='font-medium text-primary-500 cursor-pointer'>
+                            <span
+                                onClick={() => router.push("/login")}
+                                className='font-medium text-primary-500 cursor-pointer'>
                                 masuk sekarang
                             </span>
                         </small>

@@ -4,9 +4,9 @@ import Header from "./Header";
 
 export default function Layout({ children }) {
     return (
-        <div className='min-h-screen flex flex-col justify-between'>
+        <div className='min-h-screen  flex flex-col justify-between'>
             <Header />
-            <div className='pt-14 '>{children}</div>
+            <div className='pt-14 relative'>{children}</div>
             <Footer />
         </div>
     );

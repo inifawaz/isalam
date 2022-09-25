@@ -12,6 +12,11 @@ import { axios } from "../../lib/axiosInstance";
 import formatToCurreny from "../../utils/formatToCurreny";
 
 import { useRouter } from "next/router";
+import { useFormik } from "formik";
+import Input from "../../components/Input";
+import Button from "../../components/Button";
+import toast from "react-hot-toast";
+import { HiUserCircle } from "react-icons/hi";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -20,6 +25,7 @@ export default function Dashboard() {
     const [myStatistics, setMyStatistics] = useState([]);
     const [myPayments, setMyPayments] = useState([]);
     const [myProjects, setMyProjects] = useState([]);
+    const [profile, setProfile] = useState({});
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const tabs = [
         {
@@ -30,6 +36,9 @@ export default function Dashboard() {
         },
         {
             name: "Wakaf Saya",
+        },
+        {
+            name: "Profile",
         },
     ];
 
@@ -54,6 +63,9 @@ export default function Dashboard() {
                 setPageLoading(false);
             });
     };
+    useEffect(() => {
+        getMyDashboardData();
+    }, []);
 
     const handleLogout = async () => {
         setPageLoading(true);
@@ -83,9 +95,64 @@ export default function Dashboard() {
             });
     };
 
-    useEffect(() => {
-        getMyDashboardData();
-    }, []);
+    const profileFormik = useFormik({
+        enableReinitialize: true,
+        initialValues: {
+            full_name: user.full_name,
+            phone_number: user.phone_number,
+            email: user.email,
+            province: user.province,
+            city: user.city,
+            district: user.district,
+            village: user.village,
+            zip_code: user.zip_code,
+            address: user.address,
+            password: "",
+        },
+        onSubmit: (values) => {
+            handleUpdateProfile(values);
+        },
+    });
+    const [picture, setPicture] = useState(null);
+    const [avatarUrl, setAvatarUrl] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const handleUpdateProfile = async (values) => {
+        setIsLoading(true);
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(values)) {
+            formData.append(key, value);
+        }
+        formData.append("avatar_url", avatarUrl);
+        if (formData.get("password") === "") {
+            formData.delete("password");
+        }
+        formData.append("_method", "PUT");
+
+        for (const [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
+
+        await axios
+            .post("/me", formData, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                setUser(false);
+                console.log(response);
+                setUser(response.data.user);
+                console.log(user.role);
+                toast.success(response.data.message);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
+
     return (
         <Layout>
             {pageLoading && <PageLoading />}
@@ -93,13 +160,22 @@ export default function Dashboard() {
                 <Tab.Group as={"div"} vertical className={"flex space-x-8"}>
                     <div className='bg-slate-800 sticky top-[68px] rounded-md h-fit shrink-0  w-60 shadow-md border p-4'>
                         <div className='flex flex-col items-center w-full space-x-1 mb-2'>
-                            <div className='relative h-20 w-20 rounded-full overflow-hidden shadow-lg '>
-                                <Image
-                                    src={user.avatar_url}
-                                    layout='fill'
-                                    alt='avatar'
+                            {user.avatar_url ? (
+                                <div className='relative h-20 w-20 rounded-full overflow-hidden shadow-lg '>
+                                    <Image
+                                        src={user.avatar_url}
+                                        layout='fill'
+                                        alt='avatar'
+                                        objectFit='contain'
+                                    />
+                                </div>
+                            ) : (
+                                <HiUserCircle
+                                    size='5rem'
+                                    className='text-slate-100'
                                 />
-                            </div>
+                            )}
+
                             <div className='hidden mt-2 md:block'>
                                 <p className='text-sm  text-center whitespace-nowrap w-full  text-white'>
                                     {user.full_name}
@@ -206,7 +282,8 @@ export default function Dashboard() {
                                             .filter(
                                                 (item) =>
                                                     item.status.statusCode ===
-                                                    "00"
+                                                        "00" ||
+                                                    item.is_paid === 1
                                             )
                                             .map((item, index) => (
                                                 <PaymentItem
@@ -263,6 +340,152 @@ export default function Dashboard() {
                                     </div>
                                 ))}
                             </div>
+                        </Tab.Panel>
+                        <Tab.Panel>
+                            <h1 className='text-2xl font-semibold tracking-wider text-gray-500 mb-2'>
+                                Profile
+                            </h1>
+                            <form onSubmit={profileFormik.handleSubmit}>
+                                <input
+                                    type={"file"}
+                                    accept='image/*'
+                                    className='mb-2'
+                                    onChange={(e) => {
+                                        let pic = URL.createObjectURL(
+                                            e.target.files[0]
+                                        );
+                                        setPicture(pic);
+                                        setAvatarUrl(e.target.files[0]);
+                                    }}
+                                    name='avatar_url'
+                                />
+                                <div className='relative h-40 w-40 shadow-md border-2 rounded-full overflow-hidden'>
+                                    <Image
+                                        src={
+                                            picture ? picture : user.avatar_url
+                                        }
+                                        alt=''
+                                        layout='fill'
+                                        objectFit='cover'
+                                    />
+                                </div>
+                                <Input
+                                    label={"Nama Lengkap"}
+                                    name='full_name'
+                                    value={profileFormik.values.full_name}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.full_name &&
+                                        profileFormik.errors.full_name
+                                    }
+                                />
+                                <Input
+                                    label={"Nomer Telepon"}
+                                    name='phone_number'
+                                    value={profileFormik.values.phone_number}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.phone_number &&
+                                        profileFormik.errors.phone_number
+                                    }
+                                />
+                                <Input
+                                    label={"Email"}
+                                    name='email'
+                                    value={profileFormik.values.email}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.email &&
+                                        profileFormik.errors.email
+                                    }
+                                />
+                                <Input
+                                    label={"Provinsi"}
+                                    name='province'
+                                    value={profileFormik.values.province}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.province &&
+                                        profileFormik.errors.province
+                                    }
+                                />
+                                <Input
+                                    label={"Kota"}
+                                    name='city'
+                                    value={profileFormik.values.city}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.city &&
+                                        profileFormik.errors.city
+                                    }
+                                />
+                                <Input
+                                    label={"Kecamatan"}
+                                    name='district'
+                                    value={profileFormik.values.district}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.district &&
+                                        profileFormik.errors.district
+                                    }
+                                />
+                                <Input
+                                    label={"Kelurahan"}
+                                    name='village'
+                                    value={profileFormik.values.village}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.village &&
+                                        profileFormik.errors.village
+                                    }
+                                />
+                                <Input
+                                    label={"Kode Pos"}
+                                    name='zip_code'
+                                    value={profileFormik.values.zip_code}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.zip_code &&
+                                        profileFormik.errors.zip_code
+                                    }
+                                />
+                                <Input
+                                    label={"Alamat"}
+                                    name='address'
+                                    value={profileFormik.values.address}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.address &&
+                                        profileFormik.errors.address
+                                    }
+                                />
+                                <Input
+                                    label={"Password Baru"}
+                                    placeholder='kosong jika tidak ingin merubah password anda'
+                                    name='password'
+                                    value={profileFormik.values.password}
+                                    onChange={profileFormik.handleChange}
+                                    onBlur={profileFormik.handleBlur}
+                                    error={
+                                        profileFormik.touched.password &&
+                                        profileFormik.errors.password
+                                    }
+                                />
+                                <div>
+                                    <Button loading={isLoading}>
+                                        Simpan Perubahan
+                                    </Button>
+                                </div>
+                            </form>
                         </Tab.Panel>
                     </Tab.Panels>
                 </Tab.Group>
