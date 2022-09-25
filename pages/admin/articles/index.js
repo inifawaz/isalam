@@ -50,7 +50,9 @@ export default function index({ articles }) {
                             <Tab.Panel className={"flex flex-col space-y-4"}>
                                 {articles.map((item, index) => (
                                     // <Link href={`/admin/articles/${item.id}`}>
-                                    <div className=' h-fit flex   transition-all'>
+                                    <div
+                                        key={index}
+                                        className=' h-fit flex   transition-all'>
                                         <div className='relative w-60 h-60 shadow-md aspect-square'>
                                             <Image
                                                 src={item.featured_image_url}
@@ -93,6 +95,7 @@ export default function index({ articles }) {
                                     .filter((item) => item.is_shown === 0)
                                     .map((item, index) => (
                                         <Link
+                                            key={index}
                                             href={`/admin/articles/${item.id}`}>
                                             <div className=' h-fit flex cursor-pointer  transition-all'>
                                                 <div className='relative w-60 h-60 shadow-md aspect-square'>

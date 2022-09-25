@@ -315,7 +315,9 @@ export default function Dashboard() {
                             </h1>
                             <div>
                                 {myProjects.map((item, index) => (
-                                    <div className='p-6 bg-white shadow-md border '>
+                                    <div
+                                        key={index}
+                                        className='p-6 bg-white shadow-md border '>
                                         <time className='text-sm text-gray-400'>
                                             {item.created_at}
                                         </time>

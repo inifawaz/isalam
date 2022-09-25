@@ -287,6 +287,7 @@ export default function index() {
                                 <FaInstagram size={"1.2em"} />
                                 <a
                                     href='https://www.instagram.com/isalamkarim'
+                                    rel='noreferrer'
                                     target='_blank'
                                     className='text-slate-300'>
                                     isalamkarim
@@ -296,6 +297,7 @@ export default function index() {
                                 <FaFacebook size={"1.2em"} />
                                 <a
                                     href='https://www.facebook.com/isalamkarim'
+                                    rel='noreferrer'
                                     target='_blank'
                                     className='text-slate-300'>
                                     isalamkarim
@@ -305,6 +307,7 @@ export default function index() {
                                 <FaTwitter size={"1.2em"} />
                                 <a
                                     href='https://twitter.com/isalamkarim'
+                                    rel='noreferrer'
                                     target='_blank'
                                     className='text-slate-300'>
                                     isalamkarim
@@ -314,6 +317,7 @@ export default function index() {
                                 <FaTelegram size={"1.2em"} />
                                 <a
                                     href='t.me/isalamkarim'
+                                    rel='noreferrer'
                                     target='_blank'
                                     className='text-slate-300'>
                                     isalamkarim

@@ -142,20 +142,20 @@ export default function ProjectDetail({
                         <Tab.Panels className={"md:p-6 p-4"}>
                             <Tab.Panel className={"flex flex-col divide-y-2"}>
                                 {backers.map((item, index) => (
-                                    <PewakafItem data={item} />
+                                    <PewakafItem key={index} data={item} />
                                 ))}
                             </Tab.Panel>
                             <Tab.Panel>
                                 <ol className='border-l relative  border-gray-300'>
                                     {information.map((item, index) => (
-                                        <UpdateItem data={item} />
+                                        <UpdateItem key={index} data={item} />
                                     ))}
                                 </ol>
                             </Tab.Panel>
                             <Tab.Panel>
                                 <ol className='border-l relative  border-gray-300'>
                                     {reports.map((item, index) => (
-                                        <UpdateItem data={item} />
+                                        <UpdateItem key={index} data={item} />
                                     ))}
                                 </ol>
                             </Tab.Panel>

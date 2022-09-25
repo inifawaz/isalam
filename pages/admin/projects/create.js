@@ -16,7 +16,7 @@ const Editor = dynamic(() => import("../../../components/MyEditor"), {
     ssr: false,
 });
 
-export default function create({ categories }) {
+export default function Create({ categories }) {
     const [editorLoaded, setEditorLoaded] = useState(false);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);

@@ -6,7 +6,12 @@ export default function ArticleItem({ data }) {
     return (
         <div>
             <div className='relative w-full h-56'>
-                <Image src={data.picture_url} layout='fill' objectFit='cover' />
+                <Image
+                    alt='article img'
+                    src={data.picture_url}
+                    layout='fill'
+                    objectFit='cover'
+                />
             </div>
             <div className='p-6 shadow-md border'>
                 <div className='flex items-center space-x-1'>

@@ -11,7 +11,7 @@ import formatToCurreny from "../../../utils/formatToCurreny";
 import { Disclosure } from "@headlessui/react";
 import Link from "next/link";
 
-export default function paymentDetails({ payment }) {
+export default function PaymentDetails({ payment }) {
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const howToPay = [
         {
@@ -162,6 +162,7 @@ export default function paymentDetails({ payment }) {
                                                     item.data.map(
                                                         (item, index) => (
                                                             <Disclosure
+                                                                key={index}
                                                                 as='div'
                                                                 className='block '>
                                                                 {({ open }) => (

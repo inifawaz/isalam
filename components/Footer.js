@@ -47,6 +47,7 @@ export default function Footer() {
                     <ul className=' mt-4 flex grow space-x-4 items-center'>
                         <a
                             href='https://www.instagram.com/isalamkarim'
+                            rel='noreferrer'
                             target='_blank'
                             className='text-slate-300'>
                             <FaInstagram size={"1.2em"} />
@@ -54,18 +55,21 @@ export default function Footer() {
 
                         <a
                             href='https://www.facebook.com/isalamkarim'
+                            rel='noreferrer'
                             target='_blank'
                             className='text-slate-300'>
                             <FaFacebook size={"1.2em"} />
                         </a>
                         <a
                             href='https://twitter.com/isalamkarim'
+                            rel='noreferrer'
                             target='_blank'
                             className='text-slate-300'>
                             <FaTwitter size={"1.2em"} />
                         </a>
                         <a
                             href='t.me/isalamkarim'
+                            rel='noreferrer'
                             target='_blank'
                             className='text-slate-300'>
                             <FaTelegram size={"1.2em"} />

@@ -16,7 +16,7 @@ const Editor = dynamic(() => import("../../../components/MyEditor"), {
     ssr: false,
 });
 
-export default function create({ topics }) {
+export default function Create({ topics }) {
     const [featuredImage, setFeaturedImage] = useState(null);
     const [picture, setPicture] = useState(null);
     const [isDisabled, setisDisabled] = useState(false);

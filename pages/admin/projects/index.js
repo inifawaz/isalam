@@ -9,7 +9,7 @@ import Layout from "../../../components/Layout";
 import ProjectItem from "../../../components/ProjectItem";
 import { axios } from "../../../lib/axiosInstance";
 
-export default function projects() {
+export default function Projects() {
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const [projects, setProjects] = useState([]);
     const getAllProjects = async () => {
