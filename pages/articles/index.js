@@ -88,6 +88,7 @@ export default function index({ articles, topics }) {
                             const topicName = item.name;
                             return (
                                 <Tab.Panel
+                                    key={index}
                                     className={"flex flex-col space-y-4"}>
                                     {articles
                                         .filter(
@@ -95,7 +96,9 @@ export default function index({ articles, topics }) {
                                         )
                                         .map((item, index) => (
                                             // <Link href={`/admin/articles/${item.id}`}>
-                                            <div className=' h-fit flex flex-col md:flex-row   '>
+                                            <div
+                                                key={index}
+                                                className=' h-fit flex flex-col md:flex-row   '>
                                                 <div className='relative w-60 h-60 shadow-md aspect-square'>
                                                     <Image
                                                         src={
