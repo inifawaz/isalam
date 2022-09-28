@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import AdminInformationItem from "../../../components/AdminInformationItem";
 import AdminNav from "../../../components/AdminNav";
@@ -14,6 +14,7 @@ import Button from "../../../components/Button";
 import Container from "../../../components/Container";
 import Input from "../../../components/Input";
 import Layout from "../../../components/Layout";
+import AppContext from "../../../context/AppContext";
 import { axios } from "../../../lib/axiosInstance";
 import formatToCurreny from "../../../utils/formatToCurreny";
 const Editor = dynamic(() => import("../../../components/MyEditor"), {
@@ -27,6 +28,7 @@ export default function ProjectDetails({
     reports,
     payments,
 }) {
+    const { setDialogLogin } = useContext(AppContext);
     const [picture, setPicture] = useState(project.featured_image_url);
     const [featuredImage, setFeaturedImage] = useState(null);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -79,7 +81,7 @@ export default function ProjectDetails({
             id: project.id,
             // featured_image_url: project.featured_image_url,
             name: project.name,
-            category_id: project.category_id,
+            category_id: project.category_id ?? "",
             // description: project.description,
             location: project.location,
             instagram_url: project.instagram_url ?? "",
@@ -524,6 +526,7 @@ export default function ProjectDetails({
                                                 projectDetailsFormik.values
                                                     .category_id
                                             }>
+                                            <option disabled></option>
                                             {categories.map((item, index) => (
                                                 <option
                                                     key={index}

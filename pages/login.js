@@ -11,6 +11,7 @@ import Container from "../components/Container";
 import Input from "../components/Input";
 import AppContext from "../context/AppContext";
 import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils";
+import toast from "react-hot-toast";
 
 export default function Login() {
     const { setUser, setToken } = useContext(AppContext);
@@ -37,6 +38,7 @@ export default function Login() {
         await axios
             .post("/login", values)
             .then((response) => {
+                toast.success("berhasil login");
                 console.log(response);
                 const token = response.data.token;
                 const user = response.data.user;
@@ -52,7 +54,8 @@ export default function Login() {
                 }
             })
             .catch((error) => {
-                setMessage(error.response.data.message);
+                toast.error("ada yang salah, coba lagi nanti");
+                setMessage(error.response?.data?.message);
                 console.log(error);
             })
             .finally(() => {

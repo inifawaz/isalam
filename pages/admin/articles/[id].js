@@ -36,7 +36,7 @@ export default function ArticleDetails({ article, topics }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            topic_id: article.topic_id,
+            topic_id: article.topic_id ?? "",
         },
         onSubmit: (values) => {
             handleUpdate(values);

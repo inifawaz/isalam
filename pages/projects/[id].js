@@ -25,6 +25,7 @@ import Button from "../../components/Button";
 import { data } from "autoprefixer";
 import formatToCurreny from "../../utils/formatToCurreny";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function ProjectDetail({
     project,
@@ -32,10 +33,11 @@ export default function ProjectDetail({
     backers,
     reports,
 }) {
-    const { pageLoading, setPageLoading } = useContext(AppContext);
+    const { pageLoading, setPageLoading, dialogLogin, setDialogLogin } =
+        useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
     const elamount = useRef(null);
-    const { bio, token } = useContext(AppContext);
+    const { user, token } = useContext(AppContext);
 
     const [choiceAmount, setChoiceAmount] = useState("");
     const selisih = project.target_amount - project.collected_amount;
@@ -74,22 +76,33 @@ export default function ProjectDetail({
         },
     ]);
     const handleBtnWakafSekarang = () => {
-        if (formik.errors.amount) return;
-        if (formik.values.amount) setIsLoading(true);
+        // if (formik.errors.amount) return;
 
-        if (formik.values.amount === "") {
-            elamount.current.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-            });
-        }
-        if (!bio && !token) {
-            router.push("/login");
+        // if (formik.values.amount === "") {
+        //     elamount.current.scrollIntoView({
+        //         behavior: "smooth",
+        //         block: "center",
+        //     });
+        // }
+        if (!user && !token) {
+            // router.push("/login");
+            toast.error("harap login terlebih dahulu");
+            setDialogLogin(true);
         } else {
-            if (formik.values.amount === "") return;
-            router.push(
-                `/projects/${project.id}/create-payment?amount=${formik.values.amount}`
-            );
+            // if (formik.errors.amount) return;
+            if (formik.values.amount) setIsLoading(true);
+
+            if (formik.values.amount === "") {
+                elamount.current.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+            }
+            if (formik.values.amount) {
+                router.push(
+                    `/projects/${project.id}/create-payment?amount=${formik.values.amount}`
+                );
+            }
         }
     };
 
@@ -223,7 +236,7 @@ export default function ProjectDetail({
                                     color={"secondary"}
                                     loading={isLoading}
                                     onClick={handleBtnWakafSekarang}>
-                                    {!bio && !token
+                                    {!user && !token
                                         ? "Masuk Untuk Mulai Berwakaf"
                                         : "Wakaf Sekarang"}
                                 </Button>
@@ -371,7 +384,7 @@ export default function ProjectDetail({
                                     color={"secondary"}
                                     loading={isLoading}
                                     onClick={handleBtnWakafSekarang}>
-                                    {!bio && !token
+                                    {!user && !token
                                         ? "Masuk Untuk Mulai Berwakaf"
                                         : "Wakaf Sekarang"}
                                 </Button>

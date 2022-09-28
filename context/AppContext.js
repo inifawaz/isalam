@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
     const [user, setUser] = useState(false);
     const [token, setToken] = useState(false);
     const [pageLoading, setPageLoading] = useState(false);
+    const [dialogLogin, setDialogLogin] = useState(false);
     const checkAuth = async () => {
         await axios
             .get("/me", {
@@ -44,6 +45,8 @@ export const AppProvider = ({ children }) => {
                 setToken,
                 pageLoading,
                 setPageLoading,
+                dialogLogin,
+                setDialogLogin,
             }}>
             {children}
         </AppContext.Provider>

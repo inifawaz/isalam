@@ -29,6 +29,10 @@ export default function AdminNav() {
             name: "Pengguna",
             href: "/admin/users",
         },
+        {
+            name: "Pengaturan",
+            href: "/admin/settings",
+        },
     ];
 
     const router = useRouter();

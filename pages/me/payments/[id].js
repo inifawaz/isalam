@@ -43,6 +43,300 @@ export default function PaymentDetails({ payment }) {
                         "Pembayaran Selesai",
                     ],
                 },
+                {
+                    via: "ATM BRI",
+                    steps: [
+                        "Masukkan Kartu ATM BRI dan PIN",
+                        "Pilih menu LAINNYA",
+                        "Pilih menu PEMBAYARAN/PEMBELIAN",
+                        "Pilih menu PEMBAYARAN/PEMBELIAN LAIN",
+                        "Pilih menu BRIVA",
+                        "Masukkan nomor VA yang tertera pada halaman konfirmasi dan tekan BENAR",
+                        "Konfirmasi pembayaran dengan menekan Ya",
+                        "Pembayaran Selesai",
+                    ],
+                },
+                {
+                    via: "ATM BERSAMA / ATM PRIMA",
+                    steps: [
+                        "Pilih Transaksi lainnya",
+                        "Pilih Transaksi lainnya",
+                        "Pilih Transfer ke Bank Lain",
+                        "Masukkan kode Bank Rakyat Indonesia/BRI 002 dan 16 Digit nomor Virtual Account",
+                        "Masukkan Nominal Transfer seusai tagihan atau kewajiban Anda. pastikan nominal sesuai",
+                        "Konfirmasi rincian Anda akan tampil di layar, cek dan tekan 'Ya' untuk melanjutkan",
+                        "Transaksi Berhasil",
+                    ],
+                },
+            ],
+        },
+        {
+            paymentName: "MAYBANK VA",
+            data: [
+                {
+                    via: "ATM May Bank",
+                    steps: [
+                        "Masukkan kartu ATM Maybank & PIN.",
+                        "Pilih Menu Pembayaran/Top Up Pulsa.",
+                        "Plih Menu Virtual Account.",
+                        "Masukkan nomor 7828XXXXXXXXXXXX (16 angka kode Virtual account) dan Jumlah Nominal Pembayaran",
+                        "Konfirmasi Validasi Pembayaran (Pastikan Nominal dan informasi sesuai).",
+                        "Simpan struk transaksi sebagai bukti pembayaran.",
+                    ],
+                },
+                {
+                    via: "ATM Bersama",
+                    steps: [
+                        "Pada Menu utama, pilih Transaksi Lainnya.",
+                        "Pilih Transfer.",
+                        "Pilih Antar Bank Online.",
+                        "Masukkan nomor 016 7828XXXXXXXXXXXX (kode 016 (kode bank Maybank) dan 16 angka kode Virtual account).",
+                        "Masukkan jumlah pembayaran sesuai tagihan",
+                        "Akan muncul rincian pembayaran Anda. Jika sudah benar, klik 'Ya' untuk melanjutkan.",
+                    ],
+                },
+                {
+                    via: "Maybank2u Internet Banking (Online Banking)",
+                    steps: [
+                        "Login ke website Maybank Personal Internet Banking (M2U).",
+                        "Di halaman Transfer",
+                        "Pilih Maybank Virtual Account.",
+                        "Pilih rekening sumber dana, masukkan nomor virtual account dan jumlah yang harus dibayar.",
+                        "Akan muncul layar konfirmasi, masukkan SMS token (TAC).",
+                    ],
+                },
+                {
+                    via: "ATM BCA / Jaringan ATM Prima",
+                    steps: [
+                        "Pada Menu utama, Pilih Transaksi Lainnya.",
+                        "Pilih Transfer.",
+                        "Pilih Transfer.",
+                        "Masukkan kode 016 untuk MAY BANK lalu tekan Benar.",
+                        "Masukkan kode 016 untuk MAY BANK lalu tekan Benar.",
+                        "Masukkan 7828XXXXXXXXXXXX ( 16 kode virtual account pembayaran) lalu tekan Benar.",
+                        "Akan muncul rincian pembayaran Anda. Jika sudah benar, klik 'Ya' untuk melanjutkan.",
+                    ],
+                },
+            ],
+        },
+        {
+            paymentName: "RETAIL",
+            data: [
+                {
+                    via: "Alfamart, Pos Indonesia, Dan-dan, Lawson, dan Pegadaian",
+                    steps: [
+                        "Alfamart, Pos Indonesia, Dan-dan, Lawson, dan Pegadaian",
+                        "Datang ke Gerai retail ( Alfamart, Kantor Pos, Pegadaian, dan (dan-dan)).",
+                        "Informasikan kepada kasir akan melakukan 'Pembayaran Telkom/indihome/Finpay'. ( Jika kasir menanyakan jenis Pembayaran Telkom, pilih pembayaran untuk Telepon Rumah, atau Indihome atau Finpay )",
+                        "Tunjukkan dan berikan Kode Pembayaran ke Kasir.",
+                        "Lakukan pembayaran sesuai nominal yang diinformasikan dan tunggu proses selesai.",
+                        "Minta dan simpan struk sebagai bukti pembayaran.",
+                        "Pembayaran anda akan langsung terdeteksi secara otomatis.",
+                    ],
+                },
+            ],
+        },
+        {
+            paymentName: "PERMATA VA",
+            data: [
+                {
+                    via: "ATM Mandiri/Jaringan ATM Bersama",
+                    steps: [
+                        "Pada Menu utama, pilih Transaksi Lainnya.",
+                        "Pilih Transfer.",
+                        "Pilih Antar Bank Online.",
+                        "Masukkan nomor 013 868001XXXXXXXXXX (kode 013 (kode bank) dan 16 angka kode Virtual account).",
+                        "Masukkan jumlah pembayaran sesuai tagihan",
+                        "Akan muncul rincian pembayaran Anda. Jika sudah benar, klik 'Ya' untuk melanjutkan.",
+                    ],
+                },
+                {
+                    via: "ATM BCA/Jaringan ATM PRIMA",
+                    steps: [
+                        "Pada Menu utama, Pilih Transaksi Lainnya.",
+                        "Pilih Transfer.",
+                        "Pilih Ke Rek Bank Lain.",
+                        "Masukkan kode 013 untuk PERMATA lalu tekan Benar.",
+                        "Masukkan jumlah tagihan yang akan Anda bayar secara lengkap.",
+                        "Masukkan 868001XXXXXXXXXX ( 16 kode virtual account pembayaran) lalu tekan Benar.",
+                        "Akan muncul rincian pembayaran Anda. Jika sudah benar, klik 'Ya' untuk melanjutkan.",
+                    ],
+                },
+                {
+                    via: "ATM Permata",
+                    steps: [
+                        "Pilih menu TRANSAKSI LAINNYA",
+                        "Pilih menu PEMBAYARAN",
+                        "Pilih menu PEMBAYARAN LAINNYA",
+                        "Pilih menu VIRTUAL ACCOUNT",
+                        "Masukkan nomor VIRTUAL ACCOUNT yang tertera pada halaman konfirmasi, dan tekan BENAR",
+                        "Pilih rekening yang menjadi sumber dana yang akan didebet, lalu tekan YA untuk konfirmasi transaksi",
+                    ],
+                },
+                {
+                    via: "Permata Net",
+                    steps: [
+                        "Buka website PermataNet: https://new.permatanet.com",
+                        "Masukkan user ID & Password",
+                        "Pilih Pembayaran Tagihan",
+                        "Pilih Virtual Account",
+                        "Masukkan 16 digit nomor Virtual Account yang tertera pada halaman konfirmasi (868001XXXXXXXXXX)",
+                        "Masukkan nominal pembayaran sesuai dengan yang ditagihkan",
+                        "Muncul Konfirmasi pembayaran",
+                        "Masukkan otentikasi transaksi/token",
+                        "Transaksi selesai",
+                    ],
+                },
+                {
+                    via: "Permata Mobile",
+                    steps: [
+                        "Buka aplikasi PermataMobile Internet (Android/iPhone)",
+                        "Masukkan User ID & Password",
+                        "Pilih Pembayaran Tagihan",
+                        "Pilih Virtual Account",
+                        "Masukkan 16 digit nomor Virtual Account yang tertera pada halaman konfirmasi (868001XXXXXXXXXX)",
+                        "Masukkan nominal pembayaran sesuai dengan yang ditagihkan",
+                        "Muncul Konfirmasi pembayaran",
+                        "Masukkan otentikasi transaksi/token",
+                        "Transaksi selesai",
+                    ],
+                },
+            ],
+        },
+        {
+            paymentName: "CIMB NIAGA VA",
+            data: [
+                {
+                    via: "ATM CIMB Niaga",
+                    steps: [
+                        "Masukkan kartu ATM dan PIN kartu CIMB Anda",
+                        "Pilih Menu Transfer > Rekening CIMB Niaga Rekening Ponsel Lain > Rekening CIMB Niaga Lain",
+                        "Masukkan jumlah pembayaran sesuai dengan tagihan",
+                        "Masukkan kode virtual account pada kolom rekening penerima",
+                        "Ikuti instruksi untuk menyelesaikan transaksi",
+                    ],
+                },
+                {
+                    via: "Go Mobile",
+                    steps: [
+                        "Login ke Go-Mobile",
+                        "Pilih menu Transfer > Rekening Ponsel / CIMB Niaga",
+                        "Pilih rekening sumber anda: CASA atau Rekening Ponsel",
+                        "Pilih rekening tujuan : CASA",
+                        "Masukkan kode virtual account pada kolom nomor rekening penerima",
+                        "Masukkan jumlah pembayaran sesuai dengan tagihan",
+                        "Ikuti instruksi untuk menyelesaikan transaksi",
+                    ],
+                },
+                {
+                    via: " CIMB Virtual Account dengan CIMB Clicks",
+                    steps: [
+                        "Login ke CIMB clicks",
+                        "Pilih menu Bayar Tagihan / Pay Bills",
+                        "Pilih Rekening Sumber / Source Account dan Jenis Pembayaran / Payment Type > Virtual Account",
+                        "Masukkan nomor virtual account 11990XXXXXXXXXXX",
+                        "Nomor, nama virtual account dan jumlah billing ditampilkan pada layar",
+                        "Masukkan 6 digit mPIN dan tekan tombol Submit",
+                        "Konfirmasi pembayaran ditampilkan pada layar",
+                    ],
+                },
+                {
+                    via: "CIMB Virtual Account dengan Internet Banking Bank Lain",
+                    steps: [
+                        "Login ke internet banking",
+                        "Pilih menu transfer ke Bank Lain Online",
+                        "Pilih bank tujuan Bank CIMB Niaga (kode bank: 022)",
+                        "Pilih bank tujuan Bank CIMB Niaga (kode bank: 022)",
+                        "Masukkan jumlah pembayaran sesuai tagihan",
+                        "Nomor, nama virtual account dan jumlah billing ditampilkan pada layar",
+                        "Ikuti instruksi untuk menyelesaikan transaksi",
+                        "Konfirmasi pembayaran ditampilkan pada layar",
+                    ],
+                },
+                {
+                    via: "ATM Bersama / Prima",
+                    steps: [
+                        "Pada Menu utama, pilih Transaksi Lainnya.",
+                        "Pilih Transfer.",
+                        "Pilih Antar Bank Online.",
+                        "Masukkan nomor Virtual Account (kode bank 022 dan kode Virtual account).",
+                        "Masukkan jumlah tagihan yang akan Anda bayar secara lengkap. Pembayaran dengan jumlah yang tidak akan otomatis ditolak.",
+                        "Pada halaman konfirmasi transfer akan muncul jumlah yang dibayarkan & nomor rekening tujuan. Jika informasinya telah tekan tombol Benar.",
+                    ],
+                },
+            ],
+        },
+        {
+            paymentName: "BNI VA",
+            data: [
+                {
+                    via: "Ibank Personal (Internet Banking)",
+                    steps: [
+                        "Akses ibank.bni.co.id",
+                        "Masukkan User ID dan password",
+                        "Klik menu Transfer, lalu pilih 'Virtual Account Billing'.",
+                        "Kemudian masukan nomor Virtual Account Anda (contoh: 98886699xxxxxxxx) yang hendak dibayarkan. Lalu pilih rekening debet yang akan digunakan. Kemudian tekan 'Lanjut'",
+                        "Kemudin tagihan yang harus dibayarkan akan muncul pada layar konfirmasi.",
+                        "Kemudin tagihan yang harus dibayarkan akan muncul pada layar konfirmasi.",
+                        "Pembayaran Anda telah berhasil",
+                        "Simpan bukti transaksi",
+                    ],
+                },
+                {
+                    via: "mobile banking BNI",
+                    steps: [
+                        "Akses BNI Mobile Banking",
+                        "Masukkan user ID dan password.",
+                        "Pilih menu 'Transfer'.",
+                        "Pilih menu 'Virtual Account Billing' kemudian pilih rekening debet.",
+                        "Masukkan nomor Virtual Account Anda (contoh:98886699xxxxxxxx) pada menu 'input baru'.",
+                        "Tagihan yang harus dibayarkan akan muncul pada layar konfirmasi.",
+                        "Konfirmasi transaksi dan masukkan Password Transaksi.",
+                        "Pembayaran Anda Telah Berhasil.",
+                        "Simpan bukti transaksi",
+                    ],
+                },
+                {
+                    via: "ATM Prima",
+                    steps: [
+                        "ATM Prima",
+                        "ATM Prima",
+                        "ATM Prima",
+                        "Masukkan kode bank BNI (009) dan 16 Digit Nomor Virtual Account (contoh:98886699xxxxxxxx).",
+                        "Masukkan nominal transfer sesuai tagihan atau kewajiban Anda. pastikan nominal sesuai",
+                        "Konfirmasi rincian Anda akan tampil di layar, cek dan tekan 'Ya' untuk melanjutkan.",
+                        "Transaksi Berhasil.",
+                    ],
+                },
+                {
+                    via: "ATM Bersama",
+                    steps: [
+                        "Masukkan kartu ke mesin ATM Bersama",
+                        "Pilih 'Transaksi Lainnya'.",
+                        "Pilih menu 'Transfer'.",
+                        "Pilih menu 'Transfer'.",
+                        "Masukkan kode bank BNI (009) dan 16 Digit Nomor Virtual Account (contoh:98886699xxxxxxxx).",
+                        "Masukkan nominal transfer sesuai tagihan atau kewajiban Anda. pastikan nominal sesuai",
+                        "Masukkan nominal transfer sesuai tagihan atau kewajiban Anda. pastikan nominal sesuai",
+                        "Transaksi Berhasil.",
+                    ],
+                },
+                {
+                    via: "ATM BNI",
+                    steps: [
+                        "Masukkan Kartu Anda.",
+                        "Pilih Bahasa.",
+                        "Masukkan PIN ATM Anda.",
+                        "Masukkan PIN ATM Anda.",
+                        "Pilih 'Transfer'.",
+                        "Pilih Jenis rekening yang akan Anda gunakan (Contoh: 'Dari Rekening Tabungan').",
+                        "Pilih 'Virtual Account Billing'.",
+                        "Masukkan nomor Virtual Account Anda (contoh:98886699xxxxxxxx).",
+                        "Tagihan yang harus dibayarkan akan muncul pada layar konfirmasi.",
+                        "Konfirmasi, apabila telah sesuai, lanjutkan transaksi.",
+                        "Konfirmasi, apabila telah sesuai, lanjutkan transaksi.",
+                    ],
+                },
             ],
         },
     ];
@@ -248,15 +542,17 @@ export default function PaymentDetails({ payment }) {
                                     {formatToCurreny(payment.payment_fee)}
                                 </p>
                             </div>
-                            <div className='flex justify-between'>
-                                <p className='text-sm'>Total Pembayaran</p>
-                                <p className='text-sm'>
+                            <div className='flex justify-between mt-4'>
+                                <p className='text-lg  font-medium text-secondary-500'>
+                                    Total Pembayaran
+                                </p>
+                                <p className='text-lg  font-medium text-secondary-500'>
                                     {formatToCurreny(payment.total_amount)}
                                 </p>
                             </div>
-                            <Link href='/'>
+                            <Link href='/me/dashboard'>
                                 <a className='block text-center py-2 mt-8 bg-primary-500 text-white rounded-md'>
-                                    Kembali Ke Halaman Utama
+                                    Kembali
                                 </a>
                             </Link>
                         </div>
