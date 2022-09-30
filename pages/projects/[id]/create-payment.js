@@ -171,7 +171,7 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                                 {bbb.map((item, index) => {
                                     const code = item.code;
                                     return (
-                                        <div className='py-4'>
+                                        <div key={index} className='py-4'>
                                             <h2 className='text-gray-500 text-sm mb-2'>
                                                 {item.type}
                                             </h2>

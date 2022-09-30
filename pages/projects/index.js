@@ -8,10 +8,9 @@ import ProjectItem from "../../components/ProjectItem";
 import AppContext from "../../context/AppContext";
 import { axios } from "../../lib/axiosInstance";
 
-export default function index({ projects, categories }) {
+export default function Index({ projects, categories }) {
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const { pageLoading } = useContext(AppContext);
-    console.log(getCookie("token"));
     return (
         <>
             {pageLoading && <PageLoading />}
