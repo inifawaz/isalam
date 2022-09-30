@@ -26,6 +26,14 @@ export default function Paymentdata({ data }) {
                         </p>
                     </div>
                 )}
+                {data.status_code === "00" && (
+                    <div>
+                        <p className='text-sm text-gray-400'>Dibayarkan Pada</p>
+                        <p className=' text-secondary-500 font-semibold'>
+                            {data.paid_at}
+                        </p>
+                    </div>
+                )}
                 {data.status_code === "01" && (
                     <div>
                         <p className='text-sm text-gray-400'>Status</p>

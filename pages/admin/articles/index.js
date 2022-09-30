@@ -107,7 +107,7 @@ export default function index({ articles }) {
                                                         alt='project image'
                                                     />
                                                 </div>
-                                                <div className='p-4 bg-white border shadow-md'>
+                                                <div className='p-4 bg-white border grow shadow-md'>
                                                     <div className='flex space-x-4 justify-between items-center'>
                                                         <div className='flex items-center space-x-1'>
                                                             <HiOutlineTag className='text-gray-400' />

@@ -314,8 +314,8 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                         loading={isLoading}
                         disabled={
                             amount == 0 ||
-                            (selectedPaymentMethod.totalFee == 0 &&
-                                formik.values.on_behalf === "")
+                            selectedPaymentMethod.totalFee == 0 ||
+                            formik.values.on_behalf === ""
                                 ? true
                                 : false
                         }>

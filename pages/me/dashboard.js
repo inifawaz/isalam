@@ -33,12 +33,31 @@ export default function Dashboard() {
         },
         {
             name: "Pembayaran",
+            notif:
+                myPayments.filter(
+                    (item) => item.status && item.status.statusCode === "01"
+                ).length > 0
+                    ? myPayments.filter(
+                          (item) =>
+                              item.status && item.status.statusCode === "01"
+                      ).length
+                    : null,
         },
         {
             name: "Wakaf Saya",
         },
         {
             name: "Profile",
+            notif: [
+                user.province,
+                user.city,
+                user.district,
+                user.village,
+                user.zip_code,
+                user.address,
+            ].includes("")
+                ? "!"
+                : null,
         },
     ];
 
@@ -204,7 +223,12 @@ export default function Dashboard() {
                                                     : "border-slate-800 text-slate-400"
                                             )
                                         }>
-                                        {item.name}
+                                        <span>{item.name}</span>
+                                        {item.notif && (
+                                            <span className='bg-warning-600 text-xs w-4 h-4 ml-4 inline-flex items-center justify-center  text-white  rounded-full'>
+                                                {item?.notif}
+                                            </span>
+                                        )}
                                     </Tab>
                                 ))}
                             </Tab.List>
@@ -358,6 +382,20 @@ export default function Dashboard() {
                                 </div>
                             </Tab.Panel>
                             <Tab.Panel>
+                                {[
+                                    user.province,
+                                    user.city,
+                                    user.district,
+                                    user.village,
+                                    user.zip_code,
+                                    user.address,
+                                ].includes("") && (
+                                    <div className='p-4 mb-4 bg-warning-100 border rounded-md border-warning-400  font-medium'>
+                                        <p className='text-warning-600'>
+                                            mohon lengkapi profile anda
+                                        </p>
+                                    </div>
+                                )}
                                 <h1 className='text-2xl font-semibold tracking-wider text-gray-500 mb-2'>
                                     Profile
                                 </h1>

@@ -25,6 +25,8 @@ export default function Create({ topics }) {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
+    const [errors, setErrors] = useState({});
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
@@ -58,7 +60,17 @@ export default function Create({ topics }) {
                 toast.success(response.data.message);
             })
             .catch((error) => {
-                toast.error("ada yang salah, coba lagi nanti");
+                if (error.response.data.message) {
+                    toast.error(error.response.data.message);
+                } else {
+                    toast.error(
+                        "ada yang salah,mohon bantuannya untuk menghubungi admin"
+                    );
+                }
+
+                if (error.response.data.errors) {
+                    setErrors(error.response.data.errors);
+                }
                 console.log(error);
             })
             .finally(() => {
@@ -166,7 +178,16 @@ export default function Create({ topics }) {
                             </label>
                         </div> */}
 
-                        <Button loading={isLoading} type='submit'>
+                        <Button
+                            disabled={
+                                formik.values.topic_id === "" ||
+                                editor === "" ||
+                                featuredImage === null
+                                    ? true
+                                    : false
+                            }
+                            loading={isLoading}
+                            type='submit'>
                             Simpan Perubahan
                         </Button>
                     </form>

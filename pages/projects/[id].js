@@ -269,7 +269,7 @@ export default function ProjectDetail({
                                     Terkumpul{" "}
                                     {project.is_target === 1 ? (
                                         <span>
-                                            ({project.percent_collected_amount})
+                                            {project.percent_collected_amount}%
                                         </span>
                                     ) : null}
                                 </p>
@@ -310,17 +310,17 @@ export default function ProjectDetail({
                             <div className='flex items-center space-x-1'>
                                 <HiOutlineUserGroup className='text-gray-400' />
                                 <p className='text-xs text-gray-400'>
-                                    {data.total_backers} Pewakaf
+                                    {project.total_backers} Pewakaf
                                 </p>
                             </div>
-                            {data.is_limited_time === 1 ? (
+                            {project.is_limited_time === 1 ? (
                                 <div className='flex items-center space-x-1'>
                                     <BiTimer
                                         size={"1.2em"}
                                         className='text-gray-400'
                                     />
                                     <p className='text-xs text-gray-400'>
-                                        {data.days_left} hari lagi
+                                        {project.days_left} hari lagi
                                     </p>
                                 </div>
                             ) : null}

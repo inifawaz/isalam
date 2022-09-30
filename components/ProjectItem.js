@@ -11,14 +11,14 @@ import { BiTimer } from "react-icons/bi";
 import AppContext from "../context/AppContext";
 import formatToCurreny from "../utils/formatToCurreny";
 
-export default function ProjectItem({ data, href, onClick }) {
+export default function ProjectItem({ data, href }) {
     const { setPageLoading } = useContext(AppContext);
     const classNames = (...classes) => {
         return classes.filter(Boolean).join(" ");
     };
 
     return (
-        <Link onClick={onClick} href={`${href}`}>
+        <Link href={`${href}`}>
             <div
                 onClick={() => setPageLoading(true)}
                 className=' h-fit cursor-pointer  transition-all'>

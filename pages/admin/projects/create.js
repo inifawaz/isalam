@@ -120,8 +120,8 @@ export default function Create({ categories }) {
         formData.append("is_target", isTarget ? 1 : 0);
         formData.append("is_limited_time", isLimitedTime ? 1 : 0);
         if (isLimitedTime == 0) {
-            formData.set("start_date", null);
-            formData.set("end_date", null);
+            formData.delete("start_date");
+            formData.delete("end_date");
         }
         if (isTarget == 0) {
             formData.set("target_amount", 0);
