@@ -42,6 +42,7 @@ export default function Users() {
                 router.push("/admin/users");
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {

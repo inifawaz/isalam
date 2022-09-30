@@ -11,6 +11,7 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { axios } from "../../../lib/axiosInstance";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 const Editor = dynamic(() => import("../../../components/MyEditor"), {
     ssr: false,
@@ -57,6 +58,7 @@ export default function Create({ topics }) {
                 toast.success(response.data.message);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {

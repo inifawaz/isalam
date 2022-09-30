@@ -543,10 +543,10 @@ export default function PaymentDetails({ payment }) {
                                 </p>
                             </div>
                             <div className='flex justify-between mt-4'>
-                                <p className='text-lg  font-medium text-secondary-500'>
+                                <p className='  font-medium text-secondary-500'>
                                     Total Pembayaran
                                 </p>
-                                <p className='text-lg  font-medium text-secondary-500'>
+                                <p className='  font-medium text-secondary-500'>
                                     {formatToCurreny(payment.total_amount)}
                                 </p>
                             </div>

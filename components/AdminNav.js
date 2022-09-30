@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
+import toast from "react-hot-toast";
 import { HiUserCircle } from "react-icons/hi";
 import AppContext from "../context/AppContext";
 import { axios } from "../lib/axiosInstance";
@@ -57,6 +58,7 @@ export default function AdminNav() {
                 }
             )
             .then((response) => {
+                toast.success("berhasil logout");
                 console.log(response);
                 deleteCookie("token");
                 deleteCookie("user");
@@ -65,6 +67,7 @@ export default function AdminNav() {
                 router.push("/");
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {
@@ -73,7 +76,7 @@ export default function AdminNav() {
     };
 
     return (
-        <div className='bg-slate-800 sticky top-[68px] rounded-md h-fit shrink-0  w-60 shadow-md border p-4'>
+        <div className='bg-slate-800 sticky hidden md:block top-[68px] rounded-md h-fit shrink-0  w-60 shadow-md border p-4'>
             <div className='flex flex-col items-center w-full space-x-1 mb-2'>
                 {user.avatar_url ? (
                     <div className='relative h-20 w-20 rounded-full overflow-hidden shadow-lg '>

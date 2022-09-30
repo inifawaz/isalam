@@ -28,7 +28,6 @@ export default function ProjectDetails({
     reports,
     payments,
 }) {
-    const { setDialogLogin } = useContext(AppContext);
     const [picture, setPicture] = useState(project.featured_image_url);
     const [featuredImage, setFeaturedImage] = useState(null);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -136,6 +135,7 @@ export default function ProjectDetails({
                 toast.success(response.data.message);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error.response);
             })
             .finally(() => {
@@ -167,6 +167,7 @@ export default function ProjectDetails({
                 router.reload(window.location.pathname);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {
@@ -197,6 +198,7 @@ export default function ProjectDetails({
                 router.reload(window.location.pathname);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {

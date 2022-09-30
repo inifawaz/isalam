@@ -10,6 +10,7 @@ import Layout from "../components/Layout";
 import Container from "../components/Container";
 import Input from "../components/Input";
 import AppContext from "../context/AppContext";
+import toast from "react-hot-toast";
 
 export default function Register() {
     const { setUser, setToken } = useContext(AppContext);
@@ -38,6 +39,7 @@ export default function Register() {
         await axios
             .post("/register", values)
             .then((response) => {
+                toast.success("akun anda berhasil dibuat");
                 console.log(response);
                 const token = response.data.token;
                 const user = response.data.user;
@@ -48,6 +50,7 @@ export default function Register() {
                 router.push("/");
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
                 setMessage(error.response?.data?.message);
             })

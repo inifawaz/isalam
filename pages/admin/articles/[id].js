@@ -68,6 +68,7 @@ export default function ArticleDetails({ article, topics }) {
                 toast.success(response.data.message);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {
@@ -97,6 +98,7 @@ export default function ArticleDetails({ article, topics }) {
                 router.push(`/admin/articles`);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {

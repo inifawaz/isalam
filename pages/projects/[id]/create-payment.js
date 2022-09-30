@@ -12,14 +12,55 @@ import Button from "../../../components/Button";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import formatToCurreny from "../../../utils/formatToCurreny";
+import toast from "react-hot-toast";
+import * as yup from "yup";
 
 export default function Createtransaction({ project, paymentMethods, amount }) {
+    const bbb = [
+        {
+            type: "Credit Card",
+            code: ["VC"],
+        },
+        {
+            type: "Virtual Account",
+            code: [
+                "BC",
+                "M2",
+                "VA",
+                "I1",
+                "B1",
+                "BT",
+                "A1",
+                "AG",
+                "NC",
+                "BR",
+                "S1",
+            ],
+        },
+        {
+            type: "Ritel",
+            code: ["FT", "A2", "IR"],
+        },
+        {
+            type: "E-Wallet",
+            code: ["OV", "SA", "LF", "LA", "DA", "SL", "OL"],
+        },
+        {
+            type: "QRIS",
+            code: ["SP", "LQ", "NQ"],
+        },
+        {
+            type: "Kredit",
+            code: ["DN"],
+        },
+    ];
     const router = useRouter();
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
     const { user, token } = useContext(AppContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [isAnonim, setIsAnonim] = useState(false);
 
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState({
         paymentMethod: "",
@@ -28,7 +69,16 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
         totalFee: "0",
     });
 
-    const handleCreateTransation = async () => {
+    const formik = useFormik({
+        initialValues: {
+            on_behalf: "",
+        },
+        validationSchema: yup.object({
+            on_behalf: yup.string().required("tidak boleh kosong"),
+        }),
+    });
+
+    const handleCreateTransation = async (values) => {
         setIsLoading(true);
         const project_id = project.id;
 
@@ -44,6 +94,8 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                     project_id,
                     given_amount: amount,
                     paymentMethod,
+                    on_behalf: formik.values.on_behalf,
+                    is_anonim: isAnonim,
                 },
                 {
                     headers: {
@@ -60,6 +112,7 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                 );
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 setIsLoading(false);
                 console.log(error);
             })
@@ -71,18 +124,114 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
         <Layout>
             <Container className={"min-h-screen"}>
                 <div className='bg-white shadow-md max-w-xl mx-auto p-6 border'>
+                    <div className='mb-4'>
+                        <p className='text-primary-600 text-lg font-medium'>
+                            {project.name}
+                        </p>
+                    </div>
+                    <div>
+                        <Input
+                            label={"Program Wakaf Ini Atas Nama"}
+                            placeholder='nama anda/orang tua anda/orang yang anda sayangi/dll'
+                            name='on_behalf'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={
+                                formik.touched.on_behalf &&
+                                formik.errors.on_behalf
+                            }
+                        />
+                        <div className='mb-8 mt-8'>
+                            <label
+                                htmlFor='small-toggle'
+                                className='inline-flex relative items-center mb-1 cursor-pointer'>
+                                <input
+                                    type='checkbox'
+                                    className='sr-only peer'
+                                    id='small-toggle'
+                                    checked={isAnonim}
+                                    onChange={() => setIsAnonim(!isAnonim)}
+                                />
+                                <div
+                                    className="w-9 h-5 bg-gray-200 peer-focus:outline-none
+                                         peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                <p className='ml-3 text-sm '>
+                                    Sembunyikan nama pewakaf
+                                </p>
+                            </label>
+                        </div>
+                    </div>
                     <div>
                         <div>
-                            <p className='text-gray-500 tracking-wider text-xl mb-4 font-medium'>
-                                Pilih Metode Pembayaran
-                            </p>
+                            <p className=''>Pilih Metode Pembayaran</p>
                             <RadioGroup
-                                className={
-                                    "grid grid-cols-2 md:grid-cols-4 gap-4"
-                                }
+                                className={"flex flex-col space-y-2 divide-y-2"}
                                 value={selectedPaymentMethod}
                                 onChange={setSelectedPaymentMethod}>
-                                {paymentMethods.map((item, index) => (
+                                {bbb.map((item, index) => {
+                                    const code = item.code;
+                                    return (
+                                        <div className='py-4'>
+                                            <h2 className='text-gray-500 text-sm mb-2'>
+                                                {item.type}
+                                            </h2>
+                                            <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                                                {paymentMethods
+                                                    .filter((item) =>
+                                                        code.includes(
+                                                            item.paymentMethod
+                                                        )
+                                                    )
+                                                    .map((item, index) => (
+                                                        <RadioGroup.Option
+                                                            key={index}
+                                                            value={item}>
+                                                            {({ checked }) => (
+                                                                <div className='flex flex-col  cursor-pointer items-center '>
+                                                                    <div
+                                                                        className={classNames(
+                                                                            "w-full border-2 p-2 rounded-md",
+                                                                            checked
+                                                                                ? "border-secondary-500 shadow-md"
+                                                                                : ""
+                                                                        )}>
+                                                                        <div
+                                                                            className={classNames(
+                                                                                "  w-full h-14  relative  rounded-md",
+                                                                                checked
+                                                                                    ? ""
+                                                                                    : ""
+                                                                            )}>
+                                                                            <Image
+                                                                                src={
+                                                                                    item.paymentImage
+                                                                                }
+                                                                                layout='fill'
+                                                                                objectFit='contain'
+                                                                                alt='payment image'
+                                                                            />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <span
+                                                                        className={
+                                                                            checked
+                                                                                ? "text-secondary-500 text-xs"
+                                                                                : "text-gray-500 text-xs"
+                                                                        }>
+                                                                        {
+                                                                            item.paymentName
+                                                                        }
+                                                                    </span>
+                                                                </div>
+                                                            )}
+                                                        </RadioGroup.Option>
+                                                    ))}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                                {/* {paymentMethods.map((item, index) => (
                                     <RadioGroup.Option key={index} value={item}>
                                         {({ checked }) => (
                                             <div className='flex flex-col  cursor-pointer items-center '>
@@ -120,16 +269,11 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                                             </div>
                                         )}
                                     </RadioGroup.Option>
-                                ))}
+                                ))} */}
                             </RadioGroup>
                         </div>
                     </div>
                     <div className=' my-8 py-2 border-primary-500 border-y-2 border-dashed '>
-                        <div>
-                            <h2 className='text-gray-600 text-lg font-medium mb-1'>
-                                {project.name}
-                            </h2>
-                        </div>
                         <div className='flex justify-between'>
                             <p className='text-sm'>Nominal wakaf</p>
                             <p className='text-sm'>{formatToCurreny(amount)}</p>
@@ -169,7 +313,9 @@ export default function Createtransaction({ project, paymentMethods, amount }) {
                         color={"secondary"}
                         loading={isLoading}
                         disabled={
-                            amount == 0 || selectedPaymentMethod.totalFee == 0
+                            amount == 0 ||
+                            (selectedPaymentMethod.totalFee == 0 &&
+                                formik.values.on_behalf === "")
                                 ? true
                                 : false
                         }>
@@ -208,7 +354,7 @@ export async function getServerSideProps({ req, res, query }) {
             }
         )
         .then((response) => {
-            console.log(response.data.payment_method);
+            console.log(response);
             paymentMethods = response.data.payment_methods;
         })
         .catch((error) => {

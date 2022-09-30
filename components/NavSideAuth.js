@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 import AppContext from "../context/AppContext";
 import { axios } from "../lib/axiosInstance";
 import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 export default function NavSideAuth() {
     const { user, setUser, setToken } = useContext(AppContext);
@@ -36,23 +37,22 @@ export default function NavSideAuth() {
                 }
             )
             .then((response) => {
+                toast.success("berhasil logout");
                 console.log(response);
                 deleteCookie("token");
                 deleteCookie("user");
                 router.push("/");
 
-                setuser(false);
+                setUser(false);
                 setToken(false);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
-            })
-            .finally(() => {
-                router.push("/");
             });
     };
     return (
-        <div className='p-4 bg-white border sticky top-[58px] rounded-md shadow-md'>
+        <div className='p-4 bg-white border hidden md:block sticky top-[58px] rounded-md shadow-md'>
             <div className='flex items-center space-x-1'>
                 <div className='relative h-8 w-8 rounded-full overflow-hidden shadow-lg border'>
                     <Image src={user.avatar_url} layout='fill' alt='avatar' />

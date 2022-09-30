@@ -2,7 +2,7 @@ import React from "react";
 
 export default function PageLoading() {
     return (
-        <div className='absolute inset-0 z-10 bg-black/40 flex items-center justify-center'>
+        <div className='fixed inset-0 z-10 bg-black/40'>
             <div className='p-4 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md bg-white'>
                 <svg
                     className='animate-spin mx-auto  h-6 w-6 text-gray-500'

@@ -38,6 +38,7 @@ export default function AdminReportItem({ data }) {
                 router.reload(window.location.pathname);
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {
@@ -64,6 +65,7 @@ export default function AdminReportItem({ data }) {
                 router.reload(window.location.pathname);
             })
             .catch((error) => {
+                toast.error("ada yang salah coba lagi nanti");
                 console.log(error);
             })
             .finally(() => {

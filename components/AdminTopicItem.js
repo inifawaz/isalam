@@ -38,6 +38,7 @@ export default function AdminTopicItem({ data, getAllTopics }) {
                 getAllTopics();
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
                 formik.handleReset();
                 toast.error("ada yang salah, coba lagi nanti");

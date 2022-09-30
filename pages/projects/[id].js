@@ -67,11 +67,11 @@ export default function ProjectDetail({
             total: backers.length,
         },
         {
-            name: "Informasi Terbaru",
+            name: "Informasi",
             total: information.length,
         },
         {
-            name: "Laporan Terbaru",
+            name: "Laporan",
             total: reports.length,
         },
     ]);

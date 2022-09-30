@@ -14,6 +14,7 @@ import * as yup from "yup";
 import Input from "./Input";
 import Button from "./Button";
 import toast from "react-hot-toast";
+import PageLoading from "./PageLoading";
 
 const navigations = [
     {
@@ -70,6 +71,7 @@ export default function Header() {
                 router.push("/");
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 console.log(error);
             });
     };
@@ -113,6 +115,7 @@ export default function Header() {
                 // }
             })
             .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
                 setMessage(error.response.data.message);
                 console.log(error);
             })
@@ -120,8 +123,195 @@ export default function Header() {
                 setIsLoading(false);
             });
     };
+
+    const [dialogRegister, setDialogRegister] = useState(false);
+    const formikRegister = useFormik({
+        initialValues: {
+            full_name: "",
+            phone_number: "",
+            email: "",
+            password: "",
+        },
+        onSubmit: (values) => {
+            handleRegister(values);
+        },
+    });
+    const handleRegister = async (values) => {
+        setMessage("");
+        setIsLoading(true);
+        await axios
+            .post("/register", values)
+            .then((response) => {
+                toast.success("akun anda berhasil dibuat");
+                console.log(response);
+                const token = response.data.token;
+                const user = response.data.user;
+                setCookie("token", token);
+                setCookie("user", user);
+                setUser(user);
+                setToken(token);
+                router.push("/");
+            })
+            .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
+                console.log(error);
+                setMessage(error.response?.data?.message);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    };
     return (
         <>
+            <Transition appear show={dialogRegister} as={Fragment}>
+                <Dialog
+                    as='div'
+                    className='relative z-10'
+                    onClose={() => {
+                        setDialogRegister(false);
+                        formikRegister.handleReset();
+                    }}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter='ease-out duration-300'
+                        enterFrom='opacity-0'
+                        enterTo='opacity-100'
+                        leave='ease-in duration-200'
+                        leaveFrom='opacity-100'
+                        leaveTo='opacity-0'>
+                        <div className='fixed inset-0 bg-black bg-opacity-70' />
+                    </Transition.Child>
+
+                    <div className='fixed inset-0 overflow-y-auto'>
+                        <div className='flex min-h-full items-center justify-center p-4 text-center'>
+                            <Transition.Child
+                                as={Fragment}
+                                enter='ease-out duration-300'
+                                enterFrom='opacity-0 scale-95'
+                                enterTo='opacity-100 scale-100'
+                                leave='ease-in duration-200'
+                                leaveFrom='opacity-100 scale-100'
+                                leaveTo='opacity-0 scale-95'>
+                                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-md  text-left align-middle shadow-xl transition-all'>
+                                    <form
+                                        onSubmit={formikRegister.handleSubmit}
+                                        className='max-w-sm w-full rounded-md bg-white shadow-md border p-8'>
+                                        {message && (
+                                            <div className='bg-warning-50 text-sm p-3 mb-4 text-warning-500'>
+                                                {message}
+                                            </div>
+                                        )}
+                                        <div className='flex flex-col mb-4'>
+                                            <h2 className='text-2xl mb-2 font-medium text-primary-600 text-center'>
+                                                Daftar
+                                            </h2>
+                                            <Input
+                                                label={"Nama Lengkap"}
+                                                name={"full_name"}
+                                                value={
+                                                    formikRegister.values
+                                                        .full_name
+                                                }
+                                                onBlur={
+                                                    formikRegister.handleBlur
+                                                }
+                                                onChange={
+                                                    formikRegister.handleChange
+                                                }
+                                                error={
+                                                    formikRegister.touched
+                                                        .full_name &&
+                                                    formikRegister.errors
+                                                        .full_name
+                                                }
+                                            />
+                                            <Input
+                                                label={"Nomer Telepon"}
+                                                name={"phone_number"}
+                                                value={
+                                                    formikRegister.values
+                                                        .phone_number
+                                                }
+                                                onBlur={
+                                                    formikRegister.handleBlur
+                                                }
+                                                onChange={
+                                                    formikRegister.handleChange
+                                                }
+                                                error={
+                                                    formikRegister.touched
+                                                        .phone_number &&
+                                                    formikRegister.errors
+                                                        .phone_number
+                                                }
+                                            />
+                                            <Input
+                                                label={"Email"}
+                                                type='email'
+                                                name={"email"}
+                                                value={
+                                                    formikRegister.values.email
+                                                }
+                                                onBlur={
+                                                    formikRegister.handleBlur
+                                                }
+                                                onChange={
+                                                    formikRegister.handleChange
+                                                }
+                                                error={
+                                                    formikRegister.touched
+                                                        .email &&
+                                                    formikRegister.errors.email
+                                                }
+                                            />
+                                            <Input
+                                                label={"Password"}
+                                                type='password'
+                                                name={"password"}
+                                                value={
+                                                    formikRegister.values
+                                                        .password
+                                                }
+                                                onBlur={
+                                                    formikRegister.handleBlur
+                                                }
+                                                onChange={
+                                                    formikRegister.handleChange
+                                                }
+                                                error={
+                                                    formikRegister.touched
+                                                        .password &&
+                                                    formikRegister.errors
+                                                        .password
+                                                }
+                                            />
+                                        </div>
+
+                                        <Button loading={isLoading}>
+                                            Daftar
+                                        </Button>
+                                        <div className='text-center mt-8'>
+                                            <small className='text-gray-500'>
+                                                sudah punya akun?{" "}
+                                                <span
+                                                    onClick={() => {
+                                                        setDialogLogin(true);
+                                                        setDialogRegister(
+                                                            false
+                                                        );
+                                                    }}
+                                                    className='font-medium text-primary-500 cursor-pointer'>
+                                                    masuk sekarang
+                                                </span>
+                                            </small>
+                                        </div>
+                                    </form>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
             <Transition appear show={dialogLogin} as={Fragment}>
                 <Dialog
                     as='div'
@@ -204,9 +394,10 @@ export default function Header() {
                                             <small className='text-gray-500'>
                                                 belum punya akun?{" "}
                                                 <span
-                                                    onClick={() =>
-                                                        router.push("/register")
-                                                    }
+                                                    onClick={() => {
+                                                        setDialogLogin(false);
+                                                        setDialogRegister(true);
+                                                    }}
                                                     className='font-medium text-primary-500 cursor-pointer'>
                                                     daftar sekarang
                                                 </span>
