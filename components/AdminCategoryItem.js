@@ -37,6 +37,7 @@ export default function AdminCategoryItem({ data, getAllCategories }) {
                 setIsEdit(false);
             })
             .catch((error) => {
+                
                 console.log(error);
                 formik.handleReset();
                 toast.error("ada yang salah, coba lagi nanti");

@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
             <Component {...pageProps} />
             <Toaster
                 toastOptions={{
-                    duration: 5000,
+                    duration: 4000,
                     style: {
                         color: "white",
                         backgroundColor: "#0f172a",

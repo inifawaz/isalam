@@ -2,6 +2,7 @@ import { Tab } from "@headlessui/react";
 import { getCookie } from "cookies-next";
 import React, { useContext } from "react";
 import Container from "../../components/Container";
+import Input from "../../components/Input";
 import Layout from "../../components/Layout";
 import PageLoading from "../../components/PageLoading";
 import ProjectItem from "../../components/ProjectItem";
@@ -28,6 +29,7 @@ export default function Index({ projects, categories }) {
                     <h2 className='text-2xl font-medium text-gray-500'>
                         Program Wakaf
                     </h2>
+                    
                     <Tab.Group>
                         <Tab.List className={"border-b mb-4 border-gray-300"}>
                             <Tab
