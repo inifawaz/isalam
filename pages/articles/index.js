@@ -5,10 +5,18 @@ import React, { useContext, useEffect, useState } from "react";
 import { HiOutlineTag } from "react-icons/hi";
 import Container from "../../components/Container";
 import Layout from "../../components/Layout";
+import AppContext from "../../context/AppContext";
 import { axios } from "../../lib/axiosInstance";
+import { useRouter } from "next/router";
 
-export default function index({ articles, topics }) {
+export default function Index({ articles, topics }) {
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
+    const { setPageLoading } = useContext(AppContext);
+    const router = useRouter();
+
+    useEffect(() => {
+        setPageLoading(false);
+    }, []);
 
     return (
         <>

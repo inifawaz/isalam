@@ -86,8 +86,7 @@ export default function Index({ projects }) {
 export async function getServerSideProps() {
     let projects = [];
     await axios.get("/projects").then((response) => {
-        console.log(response.data.projects);
-        projects = response.data.projects;
+        projects = response.data.data;
     });
     return {
         props: {

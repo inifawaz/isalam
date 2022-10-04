@@ -43,8 +43,15 @@ const navigationsAuth = [
 ];
 
 export default function Header() {
-    const { user, token, setUser, setToken, dialogLogin, setDialogLogin } =
-        useContext(AppContext);
+    const {
+        user,
+        token,
+        setUser,
+        setToken,
+        dialogLogin,
+        setDialogLogin,
+        setPageLoading,
+    } = useContext(AppContext);
     function classNames(...classes) {
         return classes.filter(Boolean).join(" ");
     }
@@ -478,6 +485,9 @@ export default function Header() {
                                             <div>
                                                 <Link href={item.href}>
                                                     <a
+                                                        onClick={() =>
+                                                            setPageLoading(true)
+                                                        }
                                                         className={classNames(
                                                             "block p-2 rounded-md transition-all",
                                                             active
@@ -595,7 +605,9 @@ export default function Header() {
                         <div className='text-sm space-x-8  hidden md:flex items-center'>
                             {navigations.map((item, index) => (
                                 <Link key={index} href={item.href}>
-                                    <a>{item.text}</a>
+                                    <a onClick={() => setPageLoading(true)}>
+                                        {item.text}
+                                    </a>
                                 </Link>
                             ))}
                             {!user && !token && (

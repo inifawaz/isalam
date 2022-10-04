@@ -3,8 +3,10 @@ import Container from "../../components/Container";
 import Layout from "../../components/Layout";
 
 import { FaFacebook, FaInstagram, FaTwitter, FaTelegram } from "react-icons/fa";
+import { useRouter } from "next/router";
 
-export default function index() {
+export default function Index() {
+    const router = useRouter();
     return (
         <Layout>
             <Container>

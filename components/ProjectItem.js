@@ -24,6 +24,14 @@ export default function ProjectItem({ data, href }) {
                 className=' h-fit cursor-pointer  transition-all'>
                 {data.featured_image_url ? (
                     <div className='relative shadow-md aspect-square'>
+                        {data.is_shown === 0 && (
+                            <div className='absolute inset-0 z-10 flex items-center justify-center bg-black/50'>
+                                <p className='text-white text-2xl'>
+                                    Disembunyikan
+                                </p>
+                            </div>
+                        )}
+
                         {data.is_ended === 1 && (
                             <div className='absolute inset-0 z-10 flex items-center justify-center bg-black/50'>
                                 <p className='text-white text-2xl'>selesai</p>

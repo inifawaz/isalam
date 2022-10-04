@@ -1,8 +1,8 @@
-import { Tab } from "@headlessui/react";
+import { Menu, Tab, Transition } from "@headlessui/react";
 import { getCookie } from "cookies-next";
 import { useFormik } from "formik";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import AdminNav from "../../../components/AdminNav";
 import AdminProjectItem from "../../../components/AdminProjectItem";
@@ -16,9 +16,13 @@ import AppContext from "../../../context/AppContext";
 import { axios } from "../../../lib/axiosInstance";
 
 export default function Projects() {
+    useEffect(() => {
+        getAllProjects();
+    }, []);
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const { pageLoading, setPageLoading } = useContext(AppContext);
     const [projects, setProjects] = useState([]);
+    const [paginations, setPaginations] = useState([]);
     const getAllProjects = async () => {
         setProjects([]);
         setPageLoading(true);
@@ -29,7 +33,62 @@ export default function Projects() {
                 },
             })
             .then((response) => {
-                setProjects(response.data.projects);
+                setProjects(response.data.projects.data);
+                setPaginations(response.data.projects.meta.links);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setPageLoading(false);
+            });
+    };
+
+    const searchFormik = useFormik({
+        initialValues: {
+            search: "",
+        },
+        onSubmit: (values) => {
+            searchProject(values);
+        },
+    });
+    const searchProject = async (values) => {
+        setProjects([]);
+        setPageLoading(true);
+        await axios
+            .get("/admin/projects", {
+                params: {
+                    search: values.search,
+                },
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                console.log(response);
+                setProjects(response.data.projects.data);
+                setPaginations(response.data.projects.meta.links);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setPageLoading(false);
+            });
+    };
+
+    const goToPage = async (link) => {
+        setProjects([]);
+        setPageLoading(true);
+        await axios
+            .get(link, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                setProjects(response.data.projects.data);
+                setPaginations(response.data.projects.meta.links);
             })
             .catch((error) => {
                 console.log(error);
@@ -59,43 +118,8 @@ export default function Projects() {
         },
     ];
 
-    useEffect(() => {
-        getAllProjects();
-    }, []);
-
-    const searchFormik = useFormik({
-        initialValues: {
-            search: "",
-        },
-        onSubmit: (values) => {
-            searchProject(values);
-        },
-    });
-
-    const searchProject = async (values) => {
-        setProjects([]);
-        setPageLoading(true);
-        await axios
-            .get("/admin/projects", {
-                params: {
-                    search: values.search,
-                },
-                headers: {
-                    Authorization: `Bearer ${getCookie("token")}`,
-                },
-            })
-            .then((response) => {
-                console.log(response);
-                setProjects(response.data.projects);
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                setPageLoading(false);
-            });
-    };
-
+    const [selectedType, setSelectedType] = useState(tabs[0]);
+    console.log(projects.length);
     return (
         <>
             {pageLoading && <PageLoading />}
@@ -139,84 +163,38 @@ export default function Projects() {
                             <Button>Cari</Button>
                         </form>
 
-                        <Tab.Group as={"div"} className='w-full'>
-                            <Tab.List
-                                className={
-                                    "border-b mb-4 w-full border-gray-300"
-                                }>
-                                {tabs.map((item, index) => (
-                                    <Tab
+                        <div className={"grid md:grid-cols-2 gap-8"}>
+                            {projects.map((item, index) => (
+                                <ProjectItem
+                                    href={`/admin/projects/${item.id}`}
+                                    data={item}
+                                    key={index}
+                                />
+                            ))}
+                        </div>
+
+                        <div onClick={() => console.log(paginations)}>
+                            {paginations.map((item, index) =>
+                                item.url === null ? null : (
+                                    <button
+                                        disabled={
+                                            item.url === null ? true : false
+                                        }
+                                        onClick={() => {
+                                            goToPage(item.url);
+                                        }}
                                         key={index}
-                                        className={({ selected }) =>
-                                            classNames(
-                                                "  whitespace-nowrap outline-none text-sm  py-2 px-4 space-x-4  border-b-2     ",
-                                                selected
-                                                    ? "border-primary-500  text-primary-500"
-                                                    : "border-white text-gray-400"
-                                            )
-                                        }>
-                                        <span>{item.name}</span>
-                                        <span>{item.total}</span>
-                                    </Tab>
-                                ))}
-                            </Tab.List>
-                            <Tab.Panels className={"w-full"}>
-                                <Tab.Panel
-                                    className={"grid md:grid-cols-2 gap-8"}>
-                                    {projects.map((item, index) => (
-                                        <ProjectItem
-                                            href={`/admin/projects/${item.id}`}
-                                            data={item}
-                                            key={index}
-                                        />
-                                    ))}
-                                </Tab.Panel>
-                                <Tab.Panel
-                                    className={"grid md:grid-cols-2 gap-8"}>
-                                    {projects
-                                        .filter(
-                                            (item) =>
-                                                item.is_shown === 1 &&
-                                                item.is_ended === 0
-                                        )
-                                        .map((item, index) => (
-                                            <ProjectItem
-                                                href={`/admin/projects/${item.id}`}
-                                                data={item}
-                                                key={index}
-                                            />
-                                        ))}
-                                </Tab.Panel>
-                                <Tab.Panel
-                                    className={"grid md:grid-cols-2 gap-8"}>
-                                    {projects
-                                        .filter(
-                                            (item) =>
-                                                item.is_ended === 1 &&
-                                                item.is_shown === 1
-                                        )
-                                        .map((item, index) => (
-                                            <ProjectItem
-                                                href={`/admin/projects/${item.id}`}
-                                                data={item}
-                                                key={index}
-                                            />
-                                        ))}
-                                </Tab.Panel>
-                                <Tab.Panel
-                                    className={"grid md:grid-cols-2 gap-8"}>
-                                    {projects
-                                        .filter((item) => item.is_shown === 0)
-                                        .map((item, index) => (
-                                            <ProjectItem
-                                                href={`/admin/projects/${item.id}`}
-                                                data={item}
-                                                key={index}
-                                            />
-                                        ))}
-                                </Tab.Panel>
-                            </Tab.Panels>
-                        </Tab.Group>
+                                        className={`py-1  mt-4 px-3 text-sm rounded-md  mr-2 ${
+                                            item.active
+                                                ? "bg-sky-600 text-white"
+                                                : "bg-gray-200 text-gray-500"
+                                        } `}
+                                        dangerouslySetInnerHTML={{
+                                            __html: item.label,
+                                        }}></button>
+                                )
+                            )}
+                        </div>
                     </div>
                 </Container>
             </Layout>
