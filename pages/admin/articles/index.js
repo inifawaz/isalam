@@ -2,16 +2,22 @@ import { Tab } from "@headlessui/react";
 import { getCookie } from "cookies-next";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { HiOutlineTag } from "react-icons/hi";
 import AdminNav from "../../../components/AdminNav";
 import Container from "../../../components/Container";
 import Layout from "../../../components/Layout";
+import AppContext from "../../../context/AppContext";
 import { axios } from "../../../lib/axiosInstance";
 
-export default function index({ articles }) {
+export default function Index({ articles }) {
     const classNames = (...classes) => classes.filter(Boolean).join(" ");
     const tabs = [{ name: "Semua" }, { name: "Disembunyikan" }];
+    const { setPageLoading } = useContext(AppContext);
+    useEffect(() => {
+        setPageLoading(false);
+    }, []);
+
     return (
         <Layout>
             <Container className={"flex space-x-8"}>
