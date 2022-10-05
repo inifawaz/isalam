@@ -97,8 +97,8 @@ export default function Projects() {
             })
             .then((response) => {
                 console.log(response);
-                setProjects(response.data.projects.data);
-                setPaginations(response.data.projects.meta.links);
+                setProjects(response.data.projects);
+                setPaginations(null);
             })
             .catch((error) => {
                 console.log(error);
