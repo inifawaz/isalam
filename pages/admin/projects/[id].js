@@ -38,7 +38,9 @@ export default function ProjectDetails({
     const [isEnded, setIsEnded] = useState(false);
     const [editor, setEditor] = useState(project.description);
     const [editorLoaded, setEditorLoaded] = useState(false);
+    const { setPageLoading } = useContext(AppContext);
     useEffect(() => {
+        setPageLoading(false);
         setEditorLoaded(true);
         if (project.is_limited_time === 1) {
             setIsLimitedTime(true);

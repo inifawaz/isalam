@@ -1,5 +1,6 @@
 import { Tab } from "@headlessui/react";
 import { getCookie } from "cookies-next";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import Container from "../../components/Container";
@@ -17,9 +18,10 @@ export default function Index({ projects: a, categories, paginations: b }) {
         return classes.filter(Boolean).join(" ");
     };
     const router = useRouter();
-    const { category } = router.query;
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const { pageLoading, setPageLoading } = useContext(AppContext);
     useEffect(() => {
+        setSelectedCategory(null);
         setPageLoading(false);
     }, [router]);
 
@@ -34,6 +36,53 @@ export default function Index({ projects: a, categories, paginations: b }) {
             })
             .then((response) => {
                 setProjects(response.data.data);
+                setSelectedCategory(null);
+                setPaginations(response.data.meta.links);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setPageLoading(false);
+            });
+    };
+
+    const getProjectsByCategory = async (category) => {
+        setProjects([]);
+        setPageLoading(true);
+        await axios
+            .get(`/projects`, {
+                params: {
+                    category: category,
+                },
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                setProjects(response.data.projects);
+                setSelectedCategory(response.data.category);
+                setPaginations(null);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setPageLoading(false);
+            });
+    };
+    const getAllProjects = async (category) => {
+        setProjects([]);
+        setPageLoading(true);
+        await axios
+            .get(`/projects`, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                setProjects(response.data.data);
+                setSelectedCategory(null);
                 setPaginations(response.data.meta.links);
             })
             .catch((error) => {
@@ -48,15 +97,6 @@ export default function Index({ projects: a, categories, paginations: b }) {
         <>
             {pageLoading && <PageLoading />}
             <Layout>
-                {/* <Container className={"grid md:grid-cols-3 min-h-screen gap-8"}>
-                {projects.map((item, index) => (
-                    <ProjectItem
-                        href={`/projects/${item.id}`}
-                        key={index}
-                        data={item}
-                    />
-                ))}
-            </Container> */}
                 <Container>
                     <h2 className='text-2xl font-medium text-gray-500'>
                         Program Wakaf
@@ -64,13 +104,10 @@ export default function Index({ projects: a, categories, paginations: b }) {
                     <div className='border-b mb-4 border-gray-300'>
                         <button
                             onClick={() => {
-                                setPageLoading(true);
-                                router.push({
-                                    pathname: "/projects",
-                                });
+                                getAllProjects();
                             }}
                             className={`whitespace-nowrap outline-none text-sm  py-2 px-2  border-b-2 ${
-                                Object.keys(router.query).length < 1
+                                !selectedCategory
                                     ? "border-primary-500  text-primary-500"
                                     : "border-white text-gray-400"
                             }`}>
@@ -79,17 +116,11 @@ export default function Index({ projects: a, categories, paginations: b }) {
                         {categories.map((item, index) => (
                             <button
                                 onClick={() => {
-                                    setPageLoading(true);
-                                    router.push({
-                                        pathname: "/projects",
-                                        query: {
-                                            category: item.name,
-                                        },
-                                    });
+                                    getProjectsByCategory(item.name);
                                 }}
                                 key={index}
                                 className={`whitespace-nowrap outline-none text-sm  py-2 px-2  border-b-2 ${
-                                    item.name === category
+                                    selectedCategory === item.name
                                         ? "border-primary-500  text-primary-500"
                                         : "border-white text-gray-400"
                                 }`}>
@@ -97,6 +128,14 @@ export default function Index({ projects: a, categories, paginations: b }) {
                             </button>
                         ))}
                     </div>
+
+                    {selectedCategory && (
+                        <div className=''>
+                            <p className='text-lg mb-4'>
+                                Menampilkan kategori {selectedCategory}
+                            </p>
+                        </div>
+                    )}
                     <div className={"grid md:grid-cols-3 gap-8"}>
                         {projects.map((item, index) => (
                             <ProjectItem
@@ -106,26 +145,30 @@ export default function Index({ projects: a, categories, paginations: b }) {
                             />
                         ))}
                     </div>
-                    <div onClick={() => console.log(paginations)}>
-                        {paginations.map((item, index) =>
-                            item.url === null ? null : (
-                                <button
-                                    disabled={item.url === null ? true : false}
-                                    onClick={() => {
-                                        goToPage(item.url);
-                                    }}
-                                    key={index}
-                                    className={`py-1  mt-4 px-3 text-sm rounded-md  mr-2 ${
-                                        item.active
-                                            ? "bg-sky-600 text-white"
-                                            : "bg-gray-200 text-gray-500"
-                                    } `}
-                                    dangerouslySetInnerHTML={{
-                                        __html: item.label,
-                                    }}></button>
-                            )
-                        )}
-                    </div>
+                    {paginations && (
+                        <div onClick={() => console.log(paginations)}>
+                            {paginations.map((item, index) =>
+                                item.url === null ? null : (
+                                    <button
+                                        disabled={
+                                            item.url === null ? true : false
+                                        }
+                                        onClick={() => {
+                                            goToPage(item.url);
+                                        }}
+                                        key={index}
+                                        className={`py-1  mt-4 px-3 text-sm rounded-md  mr-2 ${
+                                            item.active
+                                                ? "bg-sky-600 text-white"
+                                                : "bg-gray-200 text-gray-500"
+                                        } `}
+                                        dangerouslySetInnerHTML={{
+                                            __html: item.label,
+                                        }}></button>
+                                )
+                            )}
+                        </div>
+                    )}
                 </Container>
             </Layout>
         </>
@@ -145,6 +188,8 @@ export async function getServerSideProps(ctx) {
     await axios.get(`/categories`).then((response) => {
         categories = response.data.categories;
     });
+    console.log("test");
+
     return {
         props: {
             projects,

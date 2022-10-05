@@ -14,6 +14,7 @@ import PageLoading from "../../../components/PageLoading";
 import ProjectItem from "../../../components/ProjectItem";
 import AppContext from "../../../context/AppContext";
 import { axios } from "../../../lib/axiosInstance";
+import { BiChevronDown } from "react-icons/bi";
 
 export default function Projects() {
     useEffect(() => {
@@ -23,7 +24,10 @@ export default function Projects() {
     const { pageLoading, setPageLoading } = useContext(AppContext);
     const [projects, setProjects] = useState([]);
     const [paginations, setPaginations] = useState([]);
+    const [message, setMessage] = useState(null);
+    const [selectedType, setSelectedType] = useState(null);
     const getAllProjects = async () => {
+        setMessage(null);
         setProjects([]);
         setPageLoading(true);
         await axios
@@ -35,6 +39,33 @@ export default function Projects() {
             .then((response) => {
                 setProjects(response.data.projects.data);
                 setPaginations(response.data.projects.meta.links);
+            })
+            .catch((error) => {
+                console.log(error);
+            })
+            .finally(() => {
+                setPageLoading(false);
+            });
+    };
+    const getProjectsByType = async (data) => {
+        setMessage(null);
+        setProjects([]);
+        setPageLoading(true);
+        await axios
+            .get("/admin/projects", {
+                params: {
+                    type: data.type,
+                },
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                setProjects(response.data.projects);
+                setMessage(response.data.message);
+                setSelectedType(data.name);
+                // setPaginations(response.data.projects.meta.links);
+                setPaginations(null);
             })
             .catch((error) => {
                 console.log(error);
@@ -78,6 +109,8 @@ export default function Projects() {
     };
 
     const goToPage = async (link) => {
+        setMessage(null);
+
         setProjects([]);
         setPageLoading(true);
         await axios
@@ -99,30 +132,37 @@ export default function Projects() {
     };
 
     const tabs = [
-        { name: "Semua", total: projects.length },
+        {
+            name: "Semua",
+            get: function () {
+                getAllProjects();
+            },
+        },
         {
             name: "Berlangsung",
-            total: projects.filter(
-                (item) => item.is_ended === 0 && item.is_shown === 1
-            ).length,
+            type: "in-progress",
+            get: function () {
+                getProjectsByType(this);
+            },
         },
         {
             name: "Berakhir",
-            total: projects.filter(
-                (item) => item.is_ended === 1 && item.is_shown === 1
-            ).length,
+            type: "ended",
+            get: function () {
+                getProjectsByType(this);
+            },
         },
         {
             name: "Disembunyikan",
-            total: projects.filter((item) => item.is_shown === 0).length,
+            type: "hidden",
+            get: function () {
+                getProjectsByType(this);
+            },
         },
     ];
 
-    const [selectedType, setSelectedType] = useState(tabs[0]);
-    console.log(projects.length);
     return (
         <>
-            {pageLoading && <PageLoading />}
             <Layout>
                 <Container className={"flex space-x-8 "}>
                     <AdminNav />
@@ -163,6 +203,40 @@ export default function Projects() {
                             <Button>Cari</Button>
                         </form>
 
+                        <Menu as={"div"} className='relative'>
+                            <Menu.Button
+                                className={`py-2 mb-4 text-sm px-3 rounded-md shadow-md flex items-center space-x-2`}>
+                                <span>{selectedType ?? "Pilih Type"}</span>{" "}
+                                <BiChevronDown />
+                            </Menu.Button>
+                            <Menu.Items
+                                className={
+                                    "flex absolute z-30 border  flex-col p-1 rounded-md shadow-md bg-white"
+                                }>
+                                {tabs.map((item, index) => (
+                                    <Menu.Item key={index}>
+                                        {({ active }) => (
+                                            <button
+                                                onClick={() => {
+                                                    // getProjectsByType(
+                                                    //     item.type
+                                                    // );
+                                                    item.get();
+                                                }}
+                                                className={classNames(
+                                                    "text-sm text-left p-1 pr-6 rounded-md",
+                                                    active
+                                                        ? "bg-gray-100"
+                                                        : "bg-white"
+                                                )}>
+                                                {item.name}
+                                            </button>
+                                        )}
+                                    </Menu.Item>
+                                ))}
+                            </Menu.Items>
+                        </Menu>
+
                         <div className={"grid md:grid-cols-2 gap-8"}>
                             {projects.map((item, index) => (
                                 <ProjectItem
@@ -172,29 +246,30 @@ export default function Projects() {
                                 />
                             ))}
                         </div>
-
-                        <div onClick={() => console.log(paginations)}>
-                            {paginations.map((item, index) =>
-                                item.url === null ? null : (
-                                    <button
-                                        disabled={
-                                            item.url === null ? true : false
-                                        }
-                                        onClick={() => {
-                                            goToPage(item.url);
-                                        }}
-                                        key={index}
-                                        className={`py-1  mt-4 px-3 text-sm rounded-md  mr-2 ${
-                                            item.active
-                                                ? "bg-sky-600 text-white"
-                                                : "bg-gray-200 text-gray-500"
-                                        } `}
-                                        dangerouslySetInnerHTML={{
-                                            __html: item.label,
-                                        }}></button>
-                                )
-                            )}
-                        </div>
+                        {paginations && (
+                            <div onClick={() => console.log(paginations)}>
+                                {paginations.map((item, index) =>
+                                    item.url === null ? null : (
+                                        <button
+                                            disabled={
+                                                item.url === null ? true : false
+                                            }
+                                            onClick={() => {
+                                                goToPage(item.url);
+                                            }}
+                                            key={index}
+                                            className={`py-1  mt-4 px-3 text-sm rounded-md  mr-2 ${
+                                                item.active
+                                                    ? "bg-sky-600 text-white"
+                                                    : "bg-gray-200 text-gray-500"
+                                            } `}
+                                            dangerouslySetInnerHTML={{
+                                                __html: item.label,
+                                            }}></button>
+                                    )
+                                )}
+                            </div>
+                        )}
                     </div>
                 </Container>
             </Layout>
