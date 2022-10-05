@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Container from "../../components/Container";
 import Layout from "../../components/Layout";
 
 import { FaFacebook, FaInstagram, FaTwitter, FaTelegram } from "react-icons/fa";
 import { useRouter } from "next/router";
+import AppContext from "../../context/AppContext";
 
 export default function Index() {
     const router = useRouter();
-    console.log("test");
+
+    const { setPageLoading } = useContext(AppContext);
+
+    useEffect(() => {
+        setPageLoading(false);
+    });
+
     return (
         <Layout>
             <Container>

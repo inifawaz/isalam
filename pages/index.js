@@ -7,14 +7,16 @@ import PageLoading from "../components/PageLoading";
 import ProjectItem from "../components/ProjectItem";
 import AppContext from "../context/AppContext";
 import { axios } from "../lib/axiosInstance";
+import { useRouter } from "next/router";
 
 export default function Index({ projects }) {
     const { pageLoading, setPageLoading } = useContext(AppContext);
+    const router = useRouter();
 
     useEffect(() => {
         setPageLoading(false);
         console.log(getCookie("token"));
-    }, []);
+    }, [router]);
 
     return (
         <>

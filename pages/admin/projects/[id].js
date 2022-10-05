@@ -28,6 +28,8 @@ export default function ProjectDetails({
     reports,
     payments,
 }) {
+    const [dialogDelete, setDialogDelete] = useState(false);
+    const [isDeleteLoading, setIsDeleteLoading] = useState(false);
     const [picture, setPicture] = useState(project.featured_image_url);
     const [featuredImage, setFeaturedImage] = useState(null);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -207,8 +209,94 @@ export default function ProjectDetails({
                 setReportAddLoading(false);
             });
     };
+
+    const deleteProject = async () => {
+        setIsDeleteLoading(true);
+        await axios
+            .delete(`/admin/projects/${project.id}`, {
+                headers: {
+                    Authorization: `Bearer ${getCookie("token")}`,
+                },
+            })
+            .then((response) => {
+                console.log(response);
+                toast.success(response.data.message);
+
+                router.push(`/admin/projects`);
+            })
+            .catch((error) => {
+                toast.error("ada yang salah, coba lagi nanti");
+                console.log(error);
+            })
+            .finally(() => {
+                setIsDeleteLoading(false);
+            });
+    };
     return (
         <>
+            <Transition appear show={dialogDelete} as={Fragment}>
+                <Dialog
+                    as='div'
+                    className='relative z-10'
+                    onClose={() => setDialogDelete(false)}>
+                    <Transition.Child
+                        as={Fragment}
+                        enter='ease-out duration-300'
+                        enterFrom='opacity-0'
+                        enterTo='opacity-100'
+                        leave='ease-in duration-200'
+                        leaveFrom='opacity-100'
+                        leaveTo='opacity-0'>
+                        <div className='fixed inset-0 bg-black bg-opacity-70' />
+                    </Transition.Child>
+
+                    <div className='fixed inset-0 overflow-y-auto'>
+                        <div className='flex min-h-full items-center justify-center p-4 text-center'>
+                            <Transition.Child
+                                as={Fragment}
+                                enter='ease-out duration-300'
+                                enterFrom='opacity-0 scale-95'
+                                enterTo='opacity-100 scale-100'
+                                leave='ease-in duration-200'
+                                leaveFrom='opacity-100 scale-100'
+                                leaveTo='opacity-0 scale-95'>
+                                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-md bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                                    <Dialog.Title
+                                        as='h3'
+                                        className='text-lg font-medium leading-6 text-gray-900'>
+                                        Menghapus Program Wakaf
+                                    </Dialog.Title>
+                                    <div className='mt-2'>
+                                        <p className='text-sm text-gray-500'>
+                                            Apakah anda yakin ingin menghapus
+                                            Program Wakaf ini?
+                                        </p>
+                                    </div>
+
+                                    <div className='mt-4 flex justify-end space-x-2'>
+                                        <button
+                                            type='button'
+                                            className='inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2'
+                                            onClick={() =>
+                                                setDialogDelete(false)
+                                            }>
+                                            Batal
+                                        </button>
+                                        <div className='w-20'>
+                                            <Button
+                                                onClick={deleteProject}
+                                                color={"warning"}
+                                                loading={isDeleteLoading}>
+                                                Hapus
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </Dialog.Panel>
+                            </Transition.Child>
+                        </div>
+                    </div>
+                </Dialog>
+            </Transition>
             <Transition appear show={dialogAddInformation} as={Fragment}>
                 <Dialog
                     as='div'
@@ -925,6 +1013,15 @@ export default function ProjectDetails({
                                     <Button loading={isLoading} type='submit'>
                                         Simpan Perubahan
                                     </Button>
+                                    {payments.length < 1 && (
+                                        <div
+                                            onClick={() => {
+                                                setDialogDelete(true);
+                                            }}
+                                            className='text-warning-600 mt-8 cursor-pointer text-center'>
+                                            Hapus
+                                        </div>
+                                    )}
                                 </Tab.Panel>
                                 <Tab.Panel className={"w-full"}>
                                     <a
