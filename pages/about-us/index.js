@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import AppContext from "../../context/AppContext";
 
 export default function Index() {
+    console.log("test");
     const router = useRouter();
     const { setPageLoading } = useContext(AppContext);
     useEffect(() => {
